@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FA117D88-10CA-4277-8158-1FEE76CB1819}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>bc2sql.shared</RootNamespace>
+    <AssemblyName>bc2sql.shared</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandLine.cs" />
+    <Compile Include="OData\Annotation.cs" />
+    <Compile Include="OData\Collection.cs" />
+    <Compile Include="OData\ComplexType.cs" />
+    <Compile Include="OData\DataServices.cs" />
+    <Compile Include="OData\Edmx.cs" />
+    <Compile Include="OData\EntitySet.cs" />
+    <Compile Include="OData\EntityType.cs" />
+    <Compile Include="OData\EnumMember.cs" />
+    <Compile Include="OData\EnumType.cs" />
+    <Compile Include="OData\Forge.cs" />
+    <Compile Include="BountScraper.cs" />
+    <Compile Include="DatabaseConfig.cs" />
+    <Compile Include="DataSourceConfig.cs" />
+    <Compile Include="IWorkspace.cs" />
+    <Compile Include="LibraryConfig.cs" />
+    <Compile Include="OData\Key.cs" />
+    <Compile Include="OData\Member.cs" />
+    <Compile Include="OData\NavigationProperty.cs" />
+    <Compile Include="OData\ODataQueryColumn.cs" />
+    <Compile Include="OData\ODataQueryRequest.cs" />
+    <Compile Include="OData\ODataQuery.cs" />
+    <Compile Include="OData\Property.cs" />
+    <Compile Include="OData\PropertyRef.cs" />
+    <Compile Include="OData\PropertyValue.cs" />
+    <Compile Include="OData\Record.cs" />
+    <Compile Include="OData\Schema.cs" />
+    <Compile Include="RunConfig.cs" />
+    <Compile Include="ScraperConfig.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScraperStrategy.cs" />
+    <Compile Include="Serialize\Binding.cs" />
+    <Compile Include="Serialize\BoundOrigin.cs" />
+    <Compile Include="Serialize\DBConfig.cs" />
+    <Compile Include="Serialize\DSConfig.cs" />
+    <Compile Include="Serialize\FormField.cs" />
+    <Compile Include="Serialize\Origin.cs" />
+    <Compile Include="Serialize\LIBConfig.cs" />
+    <Compile Include="Serialize\SCHConfig.cs" />
+    <Compile Include="Serialize\SCRConfig.cs" />
+    <Compile Include="Serialize\Util.cs" />
+    <Compile Include="SQL\FieldDef.cs" />
+    <Compile Include="SQL\DataTypes.cs" />
+    <Compile Include="SQL\Forge.cs" />
+    <Compile Include="SQL\Scheme.cs" />
+    <Compile Include="SchedulerConfig.cs" />
+    <Compile Include="WorkspaceUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
