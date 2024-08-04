@@ -16,9 +16,9 @@ This library does all heavy lifting.
 It defines workspace management, odata requests and so on...
 
 # next thing to do:
-- add creation of destination tables
-- merge source and destination tables
-- determine deletions
-- determine insertions
+- implement altering of tables and conditional creation of tables
+- store merge results into a table
+- create user interface for configuring scrapers ($select, merge strategy, etc.)
+- implement OAuth2 authentification for OData Sources
 - create windowing of tables (create SQL and ODATA where clause / filters based on PKs to reduce table locking)
 - determine migrations
