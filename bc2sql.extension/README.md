@@ -1,0 +1,1 @@
+When specifying odata apis make sure to include the SystemId, SystemModifiedAt and the SystemInsertedAt fields of the record.

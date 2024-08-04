@@ -79,6 +79,7 @@
             this.databaseTools = new System.Windows.Forms.ToolStrip();
             this.addDatabase = new System.Windows.Forms.ToolStripButton();
             this.removeDatabase = new System.Windows.Forms.ToolStripButton();
+            this.cloneDatabase = new System.Windows.Forms.ToolStripButton();
             this.saveDatabase = new System.Windows.Forms.ToolStripButton();
             this.checkDatabaseConn = new System.Windows.Forms.ToolStripButton();
             this.allDatabases = new System.Windows.Forms.ToolStripDropDownButton();
@@ -111,11 +112,12 @@
             this.searchSchedulers = new System.Windows.Forms.ToolStripButton();
             this.librarySourcePage = new System.Windows.Forms.TabPage();
             this.librarySource = new System.Windows.Forms.RichTextBox();
-            this.cloneDatabase = new System.Windows.Forms.ToolStripButton();
+            this.webFetcher = new System.ComponentModel.BackgroundWorker();
             this.allPages.SuspendLayout();
             this.configurationPage.SuspendLayout();
             this.libraryTools.SuspendLayout();
             this.dataSourcesPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSourceView)).BeginInit();
             this.dataSourceView.Panel1.SuspendLayout();
             this.dataSourceView.Panel2.SuspendLayout();
             this.dataSourceView.SuspendLayout();
@@ -128,6 +130,7 @@
             this.dataSourceCodeCodePage.SuspendLayout();
             this.dataSourcesTools.SuspendLayout();
             this.databasesPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.databaseView)).BeginInit();
             this.databaseView.Panel1.SuspendLayout();
             this.databaseView.Panel2.SuspendLayout();
             this.databaseView.SuspendLayout();
@@ -247,6 +250,7 @@
             // 
             // dataSources
             // 
+            this.dataSources.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataSources.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataSources.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataSources.Location = new System.Drawing.Point(0, 0);
@@ -254,6 +258,7 @@
             this.dataSources.Name = "dataSources";
             this.dataSources.ReadOnly = true;
             this.dataSources.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
+            this.dataSources.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataSources.Size = new System.Drawing.Size(270, 409);
             this.dataSources.TabIndex = 1;
             this.dataSources.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataSources_RowEnter);
@@ -303,10 +308,14 @@
             // 
             // dataSourceMetaData
             // 
+            this.dataSourceMetaData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataSourceMetaData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataSourceMetaData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataSourceMetaData.Location = new System.Drawing.Point(3, 28);
+            this.dataSourceMetaData.MultiSelect = false;
             this.dataSourceMetaData.Name = "dataSourceMetaData";
+            this.dataSourceMetaData.ReadOnly = true;
+            this.dataSourceMetaData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataSourceMetaData.Size = new System.Drawing.Size(522, 352);
             this.dataSourceMetaData.TabIndex = 1;
             // 
@@ -333,7 +342,7 @@
             this.dataSourceMetaDataInspect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.dataSourceMetaDataInspect.Name = "dataSourceMetaDataInspect";
             this.dataSourceMetaDataInspect.Size = new System.Drawing.Size(23, 22);
-            this.dataSourceMetaDataInspect.Text = "toolStripButton1";
+            this.dataSourceMetaDataInspect.Text = "Inspect Entity";
             this.dataSourceMetaDataInspect.Click += new System.EventHandler(this.dataSourceMetaDataInspect_Click);
             // 
             // obtainDatasourceMetadata
@@ -343,7 +352,7 @@
             this.obtainDatasourceMetadata.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.obtainDatasourceMetadata.Name = "obtainDatasourceMetadata";
             this.obtainDatasourceMetadata.Size = new System.Drawing.Size(23, 22);
-            this.obtainDatasourceMetadata.Text = "Fetch...";
+            this.obtainDatasourceMetadata.Text = "Fetch Metadata...";
             this.obtainDatasourceMetadata.Click += new System.EventHandler(this.obtainDatasourceMetadata_Click);
             // 
             // createScraperFromEntity
@@ -353,7 +362,7 @@
             this.createScraperFromEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.createScraperFromEntity.Name = "createScraperFromEntity";
             this.createScraperFromEntity.Size = new System.Drawing.Size(23, 22);
-            this.createScraperFromEntity.Text = "Fetch...";
+            this.createScraperFromEntity.Text = "Create Scraper...";
             this.createScraperFromEntity.Click += new System.EventHandler(this.createScraperFromEntity_Click);
             // 
             // toolStripSeparator7
@@ -458,7 +467,7 @@
             this.saveDataSource.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveDataSource.Name = "saveDataSource";
             this.saveDataSource.Size = new System.Drawing.Size(36, 36);
-            this.saveDataSource.Text = "Refresh...";
+            this.saveDataSource.Text = "Save...";
             this.saveDataSource.Click += new System.EventHandler(this.saveDataSource_Click);
             // 
             // refreshDataSource
@@ -543,8 +552,10 @@
             this.databases.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.databases.Dock = System.Windows.Forms.DockStyle.Fill;
             this.databases.Location = new System.Drawing.Point(0, 0);
+            this.databases.MultiSelect = false;
             this.databases.Name = "databases";
             this.databases.ReadOnly = true;
+            this.databases.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.databases.Size = new System.Drawing.Size(270, 409);
             this.databases.TabIndex = 0;
             // 
@@ -579,6 +590,7 @@
             this.databaseConfig.Name = "databaseConfig";
             this.databaseConfig.Size = new System.Drawing.Size(522, 377);
             this.databaseConfig.TabIndex = 0;
+            this.databaseConfig.Click += new System.EventHandler(this.databaseConfig_Click);
             // 
             // databaseSourceCodePage
             // 
@@ -688,6 +700,16 @@
             this.removeDatabase.Text = "Remove...";
             this.removeDatabase.Click += new System.EventHandler(this.removeDatabase_Click);
             // 
+            // cloneDatabase
+            // 
+            this.cloneDatabase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.cloneDatabase.Image = global::bc2sql.explore.Properties.Resources.copy_alt;
+            this.cloneDatabase.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.cloneDatabase.Name = "cloneDatabase";
+            this.cloneDatabase.Size = new System.Drawing.Size(36, 36);
+            this.cloneDatabase.Text = "Clone...";
+            this.cloneDatabase.Click += new System.EventHandler(this.cloneDatabase_Click);
+            // 
             // saveDatabase
             // 
             this.saveDatabase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -695,7 +717,7 @@
             this.saveDatabase.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveDatabase.Name = "saveDatabase";
             this.saveDatabase.Size = new System.Drawing.Size(36, 36);
-            this.saveDatabase.Text = "Refresh...";
+            this.saveDatabase.Text = "Save...";
             this.saveDatabase.Click += new System.EventHandler(this.saveDatabase_Click);
             // 
             // checkDatabaseConn
@@ -722,7 +744,7 @@
             // 
             this.removeAllDatabases.Image = global::bc2sql.explore.Properties.Resources.cross_circle;
             this.removeAllDatabases.Name = "removeAllDatabases";
-            this.removeAllDatabases.Size = new System.Drawing.Size(196, 38);
+            this.removeAllDatabases.Size = new System.Drawing.Size(132, 22);
             this.removeAllDatabases.Text = "Remove all";
             this.removeAllDatabases.Click += new System.EventHandler(this.removeAllDatabases_Click);
             // 
@@ -755,6 +777,7 @@
             this.scrapers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scrapers.Location = new System.Drawing.Point(3, 42);
             this.scrapers.Name = "scrapers";
+            this.scrapers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.scrapers.Size = new System.Drawing.Size(810, 409);
             this.scrapers.TabIndex = 1;
             // 
@@ -786,6 +809,7 @@
             this.addScraper.Name = "addScraper";
             this.addScraper.Size = new System.Drawing.Size(36, 36);
             this.addScraper.Text = "Add...";
+            this.addScraper.Click += new System.EventHandler(this.addScraper_Click);
             // 
             // removeScraper
             // 
@@ -880,6 +904,7 @@
             this.schedulers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.schedulers.Location = new System.Drawing.Point(3, 42);
             this.schedulers.Name = "schedulers";
+            this.schedulers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.schedulers.Size = new System.Drawing.Size(810, 409);
             this.schedulers.TabIndex = 2;
             // 
@@ -991,15 +1016,10 @@
             this.librarySource.TabIndex = 0;
             this.librarySource.Text = "";
             // 
-            // cloneDatabase
+            // webFetcher
             // 
-            this.cloneDatabase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.cloneDatabase.Image = global::bc2sql.explore.Properties.Resources.copy_alt;
-            this.cloneDatabase.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.cloneDatabase.Name = "cloneDatabase";
-            this.cloneDatabase.Size = new System.Drawing.Size(36, 36);
-            this.cloneDatabase.Text = "Clone...";
-            this.cloneDatabase.Click += new System.EventHandler(this.cloneDatabase_Click);
+            this.webFetcher.DoWork += new System.ComponentModel.DoWorkEventHandler(this.webFetcher_DoWork);
+            this.webFetcher.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.webFetcher_RunWorkerCompleted);
             // 
             // Explore
             // 
@@ -1009,7 +1029,7 @@
             this.Controls.Add(this.allPages);
             this.Name = "Explore";
             this.ShowIcon = false;
-            this.Text = "Explore BC2SQL";
+            this.Text = "Explore - BC2SQL";
             this.Load += new System.EventHandler(this.Explore_Load);
             this.allPages.ResumeLayout(false);
             this.configurationPage.ResumeLayout(false);
@@ -1020,6 +1040,7 @@
             this.dataSourcesPage2.PerformLayout();
             this.dataSourceView.Panel1.ResumeLayout(false);
             this.dataSourceView.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataSourceView)).EndInit();
             this.dataSourceView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataSources)).EndInit();
             this.dataSourcePages.ResumeLayout(false);
@@ -1036,6 +1057,7 @@
             this.databasesPage.PerformLayout();
             this.databaseView.Panel1.ResumeLayout(false);
             this.databaseView.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.databaseView)).EndInit();
             this.databaseView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.databases)).EndInit();
             this.databaseCodePage.ResumeLayout(false);
@@ -1147,6 +1169,7 @@
         private System.Windows.Forms.ToolStripButton saveDatabase;
         private System.Windows.Forms.ToolStripButton cloneDataSource;
         private System.Windows.Forms.ToolStripButton cloneDatabase;
+        private System.ComponentModel.BackgroundWorker webFetcher;
     }
 }
 

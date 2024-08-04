@@ -72,6 +72,16 @@ namespace bc2sql.shared.SQL
             return WithEx(name, type, length, true);
         }
 
+        public string FormatDataset(IEnumerable<object> dataset)
+        {
+            return SqlForge.FormatRow(FieldDefinitions, dataset);
+        }
+
+        public IEnumerable<string> FormatDatasets(IEnumerable<IEnumerable<object>> datasets)
+        {
+            return datasets.Select(dataset => FormatDataset(dataset));
+        }
+
         public object Clone()
         {
             return MemberwiseClone();

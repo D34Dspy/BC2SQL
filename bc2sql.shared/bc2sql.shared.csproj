@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLine.cs" />
+    <Compile Include="Ext\Buffer.cs" />
+    <Compile Include="Ext\UnSafeCharBuffer.cs" />
     <Compile Include="OData\Annotation.cs" />
     <Compile Include="OData\Collection.cs" />
     <Compile Include="OData\ComplexType.cs" />
@@ -86,8 +89,10 @@
     <Compile Include="SQL\FieldDef.cs" />
     <Compile Include="SQL\DataTypes.cs" />
     <Compile Include="SQL\Forge.cs" />
+    <Compile Include="SQL\DataSetMerge.cs" />
     <Compile Include="SQL\Scheme.cs" />
     <Compile Include="SchedulerConfig.cs" />
+    <Compile Include="Ext\StringUtil.cs" />
     <Compile Include="WorkspaceUtil.cs" />
   </ItemGroup>
   <ItemGroup>

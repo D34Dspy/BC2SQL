@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.lifetimeExam = new System.Windows.Forms.Timer(this.components);
+            this.job = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // lifetimeExam
@@ -51,5 +52,6 @@
         #endregion
 
         private System.Windows.Forms.Timer lifetimeExam;
+        private System.ComponentModel.BackgroundWorker job;
     }
 }

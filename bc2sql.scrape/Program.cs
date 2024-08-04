@@ -24,25 +24,30 @@ namespace bc2sql.scrape
                 }
             });
 
-            var resp = req.GetResponse();
+            var query = req.GetResponse();
 
-            Console.WriteLine("-- OData context: " + resp.Context);
-            Console.WriteLine("-- OData query good: " + resp.Validate());
+            var entityType = query.LookupMetadata(data);
+            var datasets = query.MapDatasets(entityType);
 
-            var firstRow = resp.Columns.Zip(resp.Rows[0], (column, cell) => string.Format(
-                "-- OData Field {0} \"{1}\" = {2};",
-                column.Type.ToString(),
-                column.Identifier,
-                cell
-                ));
+            var sourceScheme = SqlForge.CreateSchemeFromMetadata(null, entityType, "#TMP");
+            var srcAlias = "BC2SQL_SOURCE";
 
-            Console.WriteLine(string.Join("\n", firstRow));
+            var destinationScheme = SqlForge.CreateSchemeFromMetadata(null, entityType);
+            var dstAlias = "BC2SQL_DESTINATION";
 
-            var entityType = resp.Lookup(data);
+            var merge =
+                new DataSetMerge()
+                .WithSource(sourceScheme)
+                .WithDestination(destinationScheme)
+                .WithDatasets(sourceScheme.FormatDatasets(datasets))
+                .WithAliases(srcAlias, dstAlias)
+                .WithWhere(SqlForge.AllEqualkeys(srcAlias, dstAlias, sourceScheme.FieldDefinitions.Where(fld => fld.Key)))
+                .Finalize();
 
-            Console.WriteLine(SqlForge.CreateMergeScript(resp, entityType, "HelloWorld"));
+            Console.WriteLine(merge);
 
             Console.ReadLine();
+
         }
     }
 }

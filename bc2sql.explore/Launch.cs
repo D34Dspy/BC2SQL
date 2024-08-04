@@ -27,6 +27,7 @@ namespace bc2sql.explore
         public Launch()
         {
             InitializeComponent();
+            this.Visible = false;
         }
 
         static void LauncherThread(object param)
@@ -38,6 +39,7 @@ namespace bc2sql.explore
         public Launch(object sender, OnLaunch launcher)
         {
             InitializeComponent();
+            this.Visible = false;
             _payload = new Payload
             {
                 Sender = sender,
@@ -50,6 +52,7 @@ namespace bc2sql.explore
 
         private void Launch_Load(object sender, EventArgs e)
         {
+            this.Visible = false;
         }
 
         bool IsAlive()

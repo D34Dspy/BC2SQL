@@ -13,6 +13,11 @@ namespace bc2sql.shared.SQL
         public int Length;
         public bool Key;
 
+        bool Fits(FieldDef other)
+        {
+            return DataType == other.DataType && Length < other.Length;
+        }
+
         string FormatLen()
         {
             if (Length > 0)

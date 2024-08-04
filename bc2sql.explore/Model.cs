@@ -1,4 +1,5 @@
 ﻿using bc2sql.shared;
+using bc2sql.shared.OData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,13 @@ namespace bc2sql.explore
         public DatabaseConfig SelectedDatabase;
         public ScraperConfig SelectedScraper;
         public SchedulerConfig SelectedScheduler;
+
+        public int InspectIndex;
+        public int InspectPropertyIndex;
+        public string InspectEntityName;
+        public DataSourceConfig InspectDataSource;
+        public EntityType InspectDataType;
+        public Property InspectProperty;
 
         public Model()
         {

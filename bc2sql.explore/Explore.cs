@@ -11,8 +11,8 @@ namespace bc2sql.explore
 {
     public partial class Explore : Form
     {
-        private View _view;
-        private Controller _controller;
+        private ExploreView _view;
+        private ExploreController _controller;
 
         public Explore()
         {
@@ -24,26 +24,15 @@ namespace bc2sql.explore
 
         }
 
-        private void Bind(DataGridView dgv, string sourceField, string caption, string description) { 
-            var col = new DataGridViewColumn();
-            col.DataPropertyName = sourceField;
-            col.HeaderText = caption;
-            col.ToolTipText = description;
-            if(dgv.AutoGenerateColumns)
-                dgv.AutoGenerateColumns = false;
-            col.CellTemplate = new DataGridViewTextBoxCell();
-            dgv.Columns.Add(col);
-        }
-
         private void InitDataSets()
         {
-            Bind(dataSources, "Name", "Name", "Name of the data source");
-            Bind(dataSources, "Identifier", "ID", "(Unique) identifier of the data source");
+            Util.Bind(dataSources, "Name", "Name", "Name of the data source");
+            Util.Bind(dataSources, "Identifier", "ID", "(Unique) identifier of the data source");
 
-            Bind(databases, "Name", "Name", "Name of the database");
-            Bind(databases, "Identifier", "ID", "(Unique) identifier of the database");
+            Util.Bind(databases, "Name", "Name", "Name of the database");
+            Util.Bind(databases, "Identifier", "ID", "(Unique) identifier of the database");
 
-            Bind(dataSourceMetaData, "Name", "Name", "Name of the (OData) entity");
+            Util.Bind(dataSourceMetaData, "Name", "Name", "Name of the (OData) entity");
         }
 
         private int WarnDataSetChangesLoss(int dataset, int xDataset)
@@ -60,7 +49,7 @@ namespace bc2sql.explore
             {
                 dataSourceConfig.SelectedObject = _view.CurrentDataSource;
                 if(_view.HasSelectedMetadata())
-                    dataSourceMetaData.DataSource = _view.CurrentDataSource.Metadata.Services.Schemas[0].Defs;
+                    dataSourceMetaData.DataSource = _view.CurrentDataSource.Metadata.Defs;
             }
 
             databases.DataSource = _view.Databases;
@@ -76,7 +65,7 @@ namespace bc2sql.explore
             BindDataSets();
         }
 
-        internal void SetVC(View view, Controller controller)
+        internal void SetVC(ExploreView view, ExploreController controller)
         {
             _view = view;
             _controller = controller;
@@ -96,8 +85,10 @@ namespace bc2sql.explore
 
         private void removeDataSource_Click(object sender, EventArgs e)
         {
+            if (dataSources.SelectedRows.Count == 0) return;
             if(MessageBox.Show("Are you sure you want to delete this data source?\nHint: it cannot be undone!!!", "Confirm Deletion", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
+                dataSources.Rows.Remove(dataSources.SelectedRows[0]);
                 _controller.DeleteDataSource();
             }
         }
@@ -228,19 +219,23 @@ namespace bc2sql.explore
 
         private void dataSourceMetaDataInspect_Click(object sender, EventArgs e)
         {
+            var entityIdx = dataSourceMetaData.SelectedRows[0].Index;
+            _controller.CreateInspection(entityIdx);
 
+            Inspect inspector = new Inspect();
+            inspector.SetVC(_view.CreateInspectView(), _controller.CreateInspectController());
+            inspector.ShowDialog();
         }
 
         private void obtainDatasourceMetadata_Click(object sender, EventArgs e)
         {
-            _controller.FetchMetadata((bool ok) => {
-
-                dataSourceConnectionState.Text =
-                    string.Format("Connection Status: {0}", ok ? "success" : "failure");
-
-                BindDataSets();
-
-            });
+            if (!_view.HasSelectedDataSource() || _view.CurrentDataSource.Endpoint == null ||
+                _view.CurrentDataSource.Endpoint == string.Empty)
+            {
+                MessageBox.Show("No endpoint specified in data source.", "URL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            webFetcher.RunWorkerAsync();
         }
 
         private void createScraperFromEntity_Click(object sender, EventArgs e)
@@ -250,8 +245,10 @@ namespace bc2sql.explore
 
         private void removeDatabase_Click(object sender, EventArgs e)
         {
+            if (databases.SelectedRows.Count == 0) return;
             if (MessageBox.Show("Are you sure you want to delete this database?\nHint: it cannot be undone!!!", "Confirm Deletion", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
+                databases.Rows.Remove(databases.SelectedRows[0]);
                 _controller.DeleteDatabase();
             }
         }
@@ -289,6 +286,30 @@ namespace bc2sql.explore
         private void removeAllDatabases_Click(object sender, EventArgs e)
         {
             // TODO
+        }
+
+        private void webFetcher_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _controller.FetchMetadata((bool ok) => {
+                dataSourceConnectionState.Text =
+                    string.Format("Connection Status: {0}", ok ? "success" : "failure");
+            });
+        }
+
+        private void webFetcher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            BindDataSets();
+        }
+
+        private void addScraper_Click(object sender, EventArgs e)
+        {
+            Ask ask = new Ask();
+            ask.ShowDialog();
+        }
+
+        private void databaseConfig_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using bc2sql.shared.Serialize;
+﻿using bc2sql.shared.OData;
+using bc2sql.shared.Serialize;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,17 +18,28 @@ namespace bc2sql.shared
         public string Name { get; set; }
         public string Description { get; set; }
         public string Endpoint { get; set; }
-        public OData.Edmx Metadata { get; set; }
+        public Schema Metadata { get; set; }
         public List<FormField> Fields { get; set; }
+
+        public string MetadataUrl {  
+            get
+            {
+                var url = Endpoint.ToString();
+                if (!url.EndsWith("/"))
+                    url += "/";
+                url += "$metadata";
+                return url;
+            } 
+        }
+
+        public string GetEntityUrl(EntityType type)
+        {
+            return MetadataUrl.Replace("$metadata", type.Name); // TODO create url from entity set rather than entity type...
+        }
 
         public void FetchMetaData()
         {
-            var url = Endpoint.ToString();
-            if (!url.EndsWith("/"))
-                url += "/";
-            url += "$metadata";
-
-            var req = WebRequest.Create(url);
+            var req = WebRequest.Create(MetadataUrl);
             req.Method = "GET";
             req.ContentType = "application/xml";
             req.UseDefaultCredentials = true;
@@ -36,7 +48,7 @@ namespace bc2sql.shared
             var resp = req.GetResponse();
 
             var s = new StreamReader(resp.GetResponseStream());
-            Metadata = OData.ODataForge.GetSchema(s.ReadToEnd());
+            Metadata = ODataForge.GetSchema(s.ReadToEnd()).Services.Schemas[0];
         }
 
         public DSConfig Io(DSConfig config = null)

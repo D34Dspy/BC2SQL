@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bc2sql.shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,14 +9,14 @@ namespace bc2sql.explore
     internal static class Program
     {
         static Model mdl;
-        static Controller ctrl;
-        static View view;
+        static ExploreController ctrl;
+        static ExploreView view;
 
         static Explore CreateExplorer(string[] args)
         {
             mdl = new Model();
-            ctrl = new Controller(mdl, args);
-            view = new View(mdl);
+            ctrl = new ExploreController(mdl, args);
+            view = new ExploreView(mdl);
 
             view.CurrentDataSource.OnChangeDataSource += CurrentDataSource_OnChangeDataSource;
             view.CurrentDataBase.OnChangeDatabase += CurrentDataBase_OnChangeDatabase;
@@ -31,6 +32,7 @@ namespace bc2sql.explore
             mdl.SelectedDatabase.Name = args.Name;
             mdl.SelectedDatabase.Description = args.Description;
             mdl.SelectedDatabase.ConnectString = args.ConnectString;
+            WorkspaceUtil.Save(mdl.SelectedDatabase);
         }
 
         static void CurrentDataSource_OnChangeDataSource(object sender, Views.CurrentDataSourceChangeEventArgs args)
@@ -38,6 +40,7 @@ namespace bc2sql.explore
             mdl.SelectedDataSource.Name = args.Name;
             mdl.SelectedDataSource.Description = args.Description;
             mdl.SelectedDataSource.Endpoint = args.Endpoint;
+            WorkspaceUtil.Save(mdl.SelectedDataSource);
         }
 
         /// <summary>

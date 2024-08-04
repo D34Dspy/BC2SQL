@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bc2sql.shared.OData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
@@ -11,12 +12,17 @@ namespace bc2sql.shared.Serialize
     public class DSConfig
     {
         public static XmlSerializer gSerializer = new XmlSerializer(typeof(DSConfig));
+        [XmlAttribute]
         public Guid Identifier { get; set; }
+        [XmlAttribute]
         public string Name { get; set; }
+        [XmlAttribute]
         public string Description { get; set; }
+        [XmlAttribute]
         public string Endpoint { get; set; }
+        [XmlElement]
         public FormField[] FormFields { get; set; }
-        public string SourceCode { get; set; }
-        public OData.Edmx Metadata { get; set; }
+        [XmlElement]
+        public Schema Metadata { get; set; }
     }
 }

@@ -52,7 +52,7 @@
     <Compile Include="Ask.Designer.cs">
       <DependentUpon>Ask.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controller.cs" />
+    <Compile Include="ExploreController.cs" />
     <Compile Include="Controllers\Databases.cs" />
     <Compile Include="Controllers\DataSources.cs" />
     <Compile Include="Controllers\Scrapers.cs" />
@@ -69,6 +69,8 @@
     <Compile Include="Inspect.Designer.cs">
       <DependentUpon>Inspect.cs</DependentUpon>
     </Compile>
+    <Compile Include="InspectController.cs" />
+    <Compile Include="InspectView.cs" />
     <Compile Include="Launch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,7 +80,8 @@
     <Compile Include="Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View.cs" />
+    <Compile Include="ExploreView.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="Views\CurrentDataBase.cs" />
     <Compile Include="Views\CurrentDataSource.cs" />
     <Compile Include="Views\CurrentDataSourceChangeEventArgs.cs" />
@@ -86,6 +89,12 @@
     <Compile Include="Views\Collections.cs" />
     <Compile Include="Views\CurrentDatabaseChangeEventArgs.cs" />
     <Compile Include="Views\CurrentLibraryChangeEventArgs.cs" />
+    <Compile Include="Views\InspectDataSource.cs" />
+    <Compile Include="Views\InspectEntity.cs" />
+    <Compile Include="Views\InspectProperty.cs" />
+    <EmbeddedResource Include="Ask.resx">
+      <DependentUpon>Ask.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Explore.resx">
       <DependentUpon>Explore.cs</DependentUpon>
     </EmbeddedResource>

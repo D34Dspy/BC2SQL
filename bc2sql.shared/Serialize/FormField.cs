@@ -10,5 +10,12 @@ namespace bc2sql.shared.Serialize
     {
         public string Key { get; set; }
         public string Value { get; set; }
+        public static FormField Create(string Key, string Value)
+        {
+            var ff = new FormField();
+            ff.Key = Key;
+            ff.Value = Value;
+            return ff;
+        }
     }
 }

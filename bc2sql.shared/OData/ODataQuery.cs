@@ -120,7 +120,7 @@ namespace bc2sql.shared.OData
             return Context != null && Context.Contains(InferedEntity);
         }
 
-        public EntityType Lookup(Edmx metadata)
+        public EntityType LookupMetadata(Edmx metadata)
         {
             foreach(var schema in metadata.Services.Schemas)
             {
@@ -181,6 +181,24 @@ namespace bc2sql.shared.OData
                 }
             }
 
+        }
+
+        public IEnumerable<object> MapDataset(object[] dataset, EntityType type)
+        {
+            return type.Properties.Select(property =>
+            {
+                for(int i = 0; i < Columns.Length; i++)
+                {
+                    if(Columns[i].Identifier == property.Name)
+                        return dataset[i];
+                }
+                throw new Exception("no mapping found in provided entity");
+            });
+        }
+
+        public IEnumerable<IEnumerable<object>> MapDatasets(EntityType type)
+        {
+            return Rows.Select(row => MapDataset(row, type));
         }
     }
 }

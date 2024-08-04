@@ -1,9 +1,12 @@
 ﻿using bc2sql.shared.OData;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace bc2sql.shared.SQL
 {
@@ -23,10 +26,12 @@ namespace bc2sql.shared.SQL
         // 
         //     throw new NotImplementedException();
         // }
-        public static Scheme CreateSchemeFromMetadata(string name, EntityType typeDef)
+        public static Scheme CreateSchemeFromMetadata(string name, EntityType typeDef, string prefix = null)
         {
             if (typeDef == null)
                 return null;
+            if (prefix == null)
+                prefix = string.Empty;
             if (name == null)
                 name = typeDef.Name;
 
@@ -48,7 +53,7 @@ namespace bc2sql.shared.SQL
             dict.Add("Edm.DateTime", DataTypes.DateTime);
             dict.Add("Edm.DateTimeOffset", DataTypes.DateTimeOffset);
 
-            var scheme = new Scheme(name);
+            var scheme = new Scheme(prefix + name);
 
             foreach (var prop in typeDef.Properties) {
 
@@ -65,23 +70,20 @@ namespace bc2sql.shared.SQL
             return scheme;
         }
 
-        public static string CreateTable(string tableName, IEnumerable<FieldDef> fields, bool temporary, out string targetTableName)
+        public static string CreateTable(string tableName, IEnumerable<FieldDef> fields)
         {
-            string identifier = tableName;
-            if (temporary)
-                identifier = "#TMP_" + identifier;
-            targetTableName = identifier;
             return string.Format(
-                "CREATE TABLE [{0}] (\n{1}\n)",
-                identifier,
-                string.Join(",\n", fields.Select(fld => fld.ToString()).ToArray())
+                "CREATE TABLE [{0}] (\n{1},\nPRIMARY KEY ( {2} )\n)",
+                tableName,
+                string.Join(",\n", fields.Select(fld => fld.ToString()).ToArray()),
+                StringUtil.Join(", ", fields.Where(fld => fld.Key).Select(fld => "\"" + fld.Identifier + "\""))
             );
         }
 
-        public static string CreateOrAlterTable(string tableName, IEnumerable<FieldDef> fields, bool temporary, out string targetTableName)
+        public static string CreateOrAlterTable(string tableName, IEnumerable<FieldDef> fields)
         {
             // TODO
-            return CreateTable(tableName, fields, temporary, out targetTableName);
+            return CreateTable(tableName, fields);
         }
 
         public delegate string DataSetInjector(object[] dataset, IEnumerable<FieldDef> metadata, out int skipDataset, out int fieldsToSkipDataset);
@@ -141,6 +143,11 @@ namespace bc2sql.shared.SQL
             return builder.ToString();
         }
 
+        public static string FormatColumns(IEnumerable<FieldDef> fields)
+        {
+            throw new NotImplementedException();
+        }
+
         public static string InsertODataValues(ODataQuery query, string tableName, IEnumerable<FieldDef> fields, DataSetInjector injector = null)
         {
 
@@ -155,6 +162,85 @@ namespace bc2sql.shared.SQL
             );
         }
 
+        public static string FormatRow(IEnumerable<FieldDef> fieldDef, IEnumerable<object> dataset)
+        {
+            StringBuilder stringBuilder= new StringBuilder();
+            var fld = fieldDef.GetEnumerator();
+            var set = dataset.GetEnumerator();
+            stringBuilder.Append("(");
+            bool first = true;
+            while(fld.MoveNext() && set.MoveNext())
+            {
+                if (first)
+                    first = false;
+                else if (fld.Current != null && set.Current != null)
+                {
+                    stringBuilder.Append(",");
+                }
+                else break;
+                stringBuilder.Append(fld.Current.FormatValue(set.Current));
+            }
+            stringBuilder.AppendLine(")");
+            return stringBuilder.ToString();
+        }
+
+        public static string InsertIntoValues(string tableName, IEnumerable<string> keys, IEnumerable<string> values)
+        {
+            return string.Format(
+            "INSERT INTO [{0}] ( \"{1}\" ) VALUES {2}",
+                tableName,
+                StringUtil.Join("\", \"", keys),
+                StringUtil.Join(",\n", values)
+            );
+        }
+
+        public static string InsertFromValues(string tableName, IEnumerable<string> keys)
+        {
+            return string.Format(
+            "INSERT ( \"{0}\" ) VALUES ({1})",
+                StringUtil.Join("\", \"", keys),
+                StringUtil.Join(",\n", keys.Select(key => string.Format("{0}.\"{1}\"", tableName, key)))
+            );
+        }
+
+        public static string InsertValues(IEnumerable<string> keys, IEnumerable<string> values)
+        {
+            return string.Format(
+            "INSERT ( {1} ) VALUES {2}",
+                StringUtil.Join(", ", keys),
+                StringUtil.Join(",\n", values)
+            );
+        }
+
+        public static IEnumerable<string> FieldAssignments(
+            string destinationName, IEnumerable<FieldDef> destinationFields,
+            string sourceName, IEnumerable<FieldDef> sourceFields
+            )
+        {
+            var dfld = destinationFields.GetEnumerator();
+            var sfld = sourceFields.GetEnumerator();
+            
+            while(dfld.MoveNext() && sfld.MoveNext())
+            {
+                if(destinationName == null)
+                {
+                    yield return string.Format("\"{0}\" = {1}.\"{2}\"", dfld.Current.Identifier, sourceName, sfld.Current.Identifier);
+                }
+                else
+                {
+                    yield return string.Format("{0}.\"{1}\" = {2}.\"{3}\"", destinationName, dfld.Current.Identifier, sourceName, sfld.Current.Identifier);
+                }
+            }
+        }
+
+        public static string UpdateSetTransferFields(IEnumerable<FieldDef> destinationFields, string sourceAlias, IEnumerable<FieldDef> sourceFields)
+        {
+            return string.Format(
+                "UPDATE SET\n\t{0}",
+                StringUtil.Join(",\n\t", FieldAssignments(null, destinationFields, sourceAlias, sourceFields))
+                );
+        }
+
         public static string DropTable(string tableName)
         {
             return string.Format("DROP TABLE [{0}]", tableName);
@@ -165,17 +251,30 @@ namespace bc2sql.shared.SQL
             return "-- AUTO GENERATED SQL SCRIPT FROM BC2SQL";
         }
 
-        public static string TransferRows(string fromTableName, string toTableName, IEnumerable<FieldDef> fields)
+        public static string AssignRows(string sourceTableName, IEnumerable<FieldDef> sourceFields, 
+            string destinationTableName, IEnumerable<FieldDef> destinationFields)
         {
             throw new NotImplementedException();
         }
 
-        public static string FormatMerge(string fromTableName, string toTableName, IEnumerable<FieldDef> fields)
-        {
-            return string.Format(
-                "SELECT {0} FROM [{1}] "
-            );
-        }
+
+        // public static string FormatMerge(string fromTableName, IEnumerable<FieldDef> fromFields, string toTableName, IEnumerable<FieldDef> toFields, string whereClause = null)
+        // {
+        //     var pkWhereClause = MatchWhereClause(
+        //         fromFields.Where(field => field.Key), 
+        //         toFields.Where(field => field.Key)
+        //     );
+        // 
+        //     if(whereClause == null) 
+        //         whereClause = string.Format("( {0} )", pkWhereClause);
+        //     else whereClause = string.Format("( {0} ) AND ( {1} )", whereClause, pkWhereClause);
+        // 
+        //     return string.Format(
+        //         "INSERT INTO [{0}] ( SELECT * FROM [{1}] WHERE ( {2} ) )",
+        //         toTableName,
+        //         fromTableName
+        //     );
+        // }
 
         static IEnumerable<T> Combine<T>(System.Collections.IEnumerator first, IEnumerator<T> second)
         {
@@ -217,30 +316,169 @@ namespace bc2sql.shared.SQL
             throw new NotImplementedException();
         }
 
-        public static string CreateMergeScript(
-            ODataQuery query,
-            EntityType type,
-            string destinationTable
+        public static string MigrateTable(EntityType previousType, EntityType newType, string destinationTable)
+        {
+            throw new NotImplementedException();
+        }
+        public static string RecursiveAllEqualkeys(string sourceAlias, string destAlias, string expr, IEnumerator<FieldDef> keys)
+        {
+            if(keys.MoveNext())
+            {
+                return Disjunction(
+                    expr,
+                    RecursiveAllEqualkeys(sourceAlias, destAlias, EqualFields(sourceAlias, keys.Current, destAlias), keys)
+                    );
+            }
+            return expr;
+        }
+
+        public static string AllEqualkeys(string sourceAlias, string destAlias, IEnumerable<FieldDef> keys)
+        {
+            return RecursiveAllEqualkeys(sourceAlias, destAlias, null, keys.GetEnumerator());
+        }
+
+        public static string Between(string tableName, FieldDef fieldDef, object begin, object end) {
+            return string.Format("{0}.\"{1}\" between {2}.\"{3}\"", tableName, fieldDef.Identifier, 
+                fieldDef.FormatValue(begin), fieldDef.FormatValue(end));
+        }
+
+        public static string Equals(string tableName, FieldDef fieldDef, object val)
+        {
+            return string.Format("{0}.\"{1}\" = {2}", tableName, fieldDef.Identifier,
+                fieldDef.FormatValue(val));
+        }
+
+        public static string EqualFields(string lhsTableName, FieldDef lhsField, string rhsTableName, FieldDef rhsField = null)
+        {
+            if (rhsField == null)
+                rhsField = lhsField;
+            return string.Format("{0}.\"{1}\" = {2}.\"{3}\"",
+                lhsTableName, lhsField.Identifier,
+                rhsTableName, rhsField.Identifier);
+        }
+
+        public static string GreaterFields(string lhsTableName, FieldDef lhsField, string rhsTableName, FieldDef rhsField = null)
+        {
+            if (rhsField == null)
+                rhsField = lhsField;
+            return string.Format("{0}.\"{1}\" > {2}.\"{3}\"",
+                lhsTableName, lhsField.Identifier,
+                rhsTableName, rhsField.Identifier);
+        }
+
+        public static string SmallerFields(string lhsTableName, FieldDef lhsField, string rhsTableName, FieldDef rhsField = null)
+        {
+            if (rhsField == null)
+                rhsField = lhsField;
+            return string.Format("{0}.\"{1}\" < {2}.\"{3}\"",
+                lhsTableName, lhsField.Identifier,
+                rhsTableName, rhsField.Identifier);
+        }
+
+        public static string Conjunction(string lhsSqlExpr, string rhsSqlExpr)
+        {
+            if (lhsSqlExpr == null && rhsSqlExpr != null)
+                return rhsSqlExpr;
+            if (rhsSqlExpr == null && lhsSqlExpr != null)
+                return lhsSqlExpr;
+            return string.Format("( {0} OR {1} )", lhsSqlExpr, rhsSqlExpr);
+        }
+
+        public static string Disjunction(string lhsSqlExpr, string rhsSqlExpr)
+        {
+            if (lhsSqlExpr == null && rhsSqlExpr != null)
+                return rhsSqlExpr;
+            if (rhsSqlExpr == null && lhsSqlExpr != null)
+                return lhsSqlExpr;
+            return string.Format("( {0} AND {1} )", lhsSqlExpr, rhsSqlExpr);
+        }
+
+        public static string Merge(
+            string destinationTable,
+            string sourceTable,
+            string whereClause,
+            string whenMatched = null,
+            string whenNotMatchedBySource = null,
+            string whenNotMatchedByDestination = null,
+            string sourceAlias = null,
+            string destinationAlias = null
             )
         {
-            Scheme generatedScheme = CreateSchemeFromMetadata(null, type);
+            if (sourceAlias == null)
+                sourceAlias = "BC2SQL_SRC";
+            if (destinationAlias == null)
+                destinationAlias = "BC2SQL_DST";
 
-            string odataSourceTableName = "";
-            string databaseTableName = "";
+            /*
+            MERGE 
 
-            var fieldDefs = AlterFieldDefsForMerge(generatedScheme.FieldDefinitions.GetEnumerator()).ToArray();
+                INTO <DestinationTable> AS BC2SQL_DST
+                USING <SourceTable> AS BC2SQL_SRC
+                ON <Matching Keys>
 
-            string[] parts = new string[]
+                    WHEN MATCHED THEN
+                        UPDATE SET 
+
+                    WHEN NOT MATCHED BY SOURCE THEN 
+                        DELETE
+
+                    WHEN NOT MATCHED BY TARGET THEN 
+                        INSERT <DestinationFields> VALUES ( <SourceFields> )
+            */
+            var match = whenMatched != null ? "WHEN MATCHED THEN " + whenMatched : string.Empty;
+            var noMatchBySrc = whenNotMatchedBySource != null ? "WHEN NOT MATCHED BY SOURCE THEN " + whenNotMatchedBySource : string.Empty;
+            var noMatchByDst = whenNotMatchedByDestination != null ? "WHEN NOT MATCHED BY TARGET THEN " + whenNotMatchedByDestination : string.Empty;
+            var lines = new string[]
             {
-                FormatSqlScriptPrefix(),
-                CreateOrAlterTable(generatedScheme.Identifier, fieldDefs, true, out odataSourceTableName),
-                InsertODataValues(query, odataSourceTableName, fieldDefs, AlterDatasetsForMerge),
-                //CreateOrAlterTable(generatedScheme, false, out databaseTableName),
-                //FormatMerge(odataSourceTableName, databaseTableName, fieldDefs)
-                DropTable(odataSourceTableName)
+                "MERGE",
+                "INTO [{0}] AS {1}",
+                "USING [{2}] AS {3}",
+                "ON {4}",
+                "{5}",
+                "{6}",
+                "{7}",
+                ";"
             };
-
-            return string.Join("\n", parts);
+            return string.Format(
+                string.Join("\n    ", lines),
+                destinationTable, destinationAlias,
+                sourceTable, sourceAlias,
+                whereClause,
+                match,
+                noMatchBySrc,
+                noMatchByDst
+            );
         }
+
+        // public static string CreateManualMergeScript(
+        //     ODataQuery query,
+        //     EntityType type,
+        //     string destinationTable,
+        //     string prefix = "OData"
+        //     )
+        // {
+        //     Scheme generatedScheme = CreateSchemeFromMetadata(null, type);
+        // 
+        //     string odataSourceTableName = "";
+        //     string databaseTableName = "";
+        // 
+        //     var fieldDefs = AlterFieldDefsForMerge(generatedScheme.FieldDefinitions.GetEnumerator()).ToArray();
+        // 
+        //     string[] parts = new string[]
+        //     {
+        //         FormatSqlScriptPrefix(),
+        //         CreateOrAlterTable(prefix + "_" + generatedScheme.Identifier, fieldDefs, true, out odataSourceTableName),
+        //         InsertODataValues(query, odataSourceTableName, fieldDefs, AlterDatasetsForMerge),
+        //         CreateOrAlterTable(generatedScheme.Identifier, fieldDefs, false, out databaseTableName),
+        //         // FormatMerge(odataSourceTableName, databaseTableName, fieldDefs),
+        //         string.Format("SELECT * INTO [{0}] FROM [{1}]",
+        //             databaseTableName,
+        //             odataSourceTableName
+        //         ),
+        //         DropTable(odataSourceTableName)
+        //     };
+        // 
+        //     return string.Join("\n", parts);
+        // }
     }
 }

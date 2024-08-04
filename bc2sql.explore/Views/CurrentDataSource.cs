@@ -108,7 +108,7 @@ namespace bc2sql.explore.Views
         }
 
         [Browsable(false)]
-        public Edmx Metadata
+        public Schema Metadata
         {
             get
             {
