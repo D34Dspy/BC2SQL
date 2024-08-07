@@ -50,6 +50,7 @@ namespace bc2sql.explore
         [STAThread]
         static void Main(string[] args)
         {
+            Util.EnsureButtonsInitialized();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(CreateExplorer(args));

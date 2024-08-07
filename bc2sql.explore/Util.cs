@@ -37,5 +37,45 @@ namespace bc2sql.explore
             help.IsBalloon = true;
             help.SetToolTip(ctrl, caption);
         }
+        static SetupButton[] _firstButtons, _defaultButtons, _lastButtons, _extendedButtons;
+
+        public static void EnsureButtonsInitialized()
+        {
+            _firstButtons = new SetupButton[1]
+            {
+                SetupButton.Next
+            };
+            _defaultButtons = new SetupButton[2]
+            {
+                SetupButton.Previous,
+                SetupButton.Next
+            };
+            _lastButtons = new SetupButton[2]
+            {
+                SetupButton.Previous,
+                SetupButton.Finish
+            };
+            _extendedButtons = new SetupButton[3]
+            {
+                SetupButton.Cancel,
+                SetupButton.Previous,
+                SetupButton.Finish
+            };
+        }
+        public static SetupButton[] GetFirstSetupButtons() => _firstButtons;
+        public static SetupButton[] GetDefaultSetupButtons() => _defaultButtons;
+        public static SetupButton[] GetLastSetupButtons() => _lastButtons;
+        public static SetupButton[] GetExtendedSetupButtons() => _extendedButtons;
+
+        public static void SetHeading(Label lbl)
+        {
+            lbl.Font = new System.Drawing.Font(lbl.Font.FontFamily, 22f, System.Drawing.FontStyle.Bold);
+            lbl.Margin = new Padding(0,0,0,30);
+        }
+        public static void SetPoint(Label lbl)
+        {
+            lbl.Font = new System.Drawing.Font(lbl.Font.FontFamily, 16f, System.Drawing.FontStyle.Regular);
+            lbl.Margin = new Padding(0,0,0,20);
+        }
     }
 }

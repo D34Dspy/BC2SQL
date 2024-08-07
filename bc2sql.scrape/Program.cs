@@ -15,6 +15,44 @@ namespace bc2sql.scrape
         {
             Edmx data = ODataForge.GetSchema(File.ReadAllText("C:\\Users\\god\\Desktop\\$metadata.xml"));
 
+            // validate simple sets and types
+            // foreach(var schema in data.Services.Schemas)
+            // {
+            //     if (schema.Containers == null)
+            //         continue;
+            //     if (schema.Defs == null)
+            //         continue;
+            //     foreach (var coll in schema.Containers)
+            //     {
+            //         if (coll.Sets == null)
+            //             continue;
+            //         foreach(var set in coll.Sets)
+            //         {
+            //             EntityType type = null;
+            //             foreach(var def in schema.Defs)
+            //             {
+            //                 if(set.Type.Equals("NAV." + def.Name))
+            //                 {
+            //                     type = def;
+            //                     break;
+            //                 }
+            //             }
+            // 
+            //             if(type == null)
+            //             {
+            //                 Console.WriteLine(string.Format("-- entity set \"{0}\" has no corresponding entity type", set.Name));
+            //                 return;
+            //             }
+            //             else
+            //             {
+            //                 Console.WriteLine(string.Format("-- entity set \"{0}\" has entity type \"{1}\"", set.Name, type.Name));
+            //             }
+            //         }
+            //     }
+            // }
+            // Console.ReadLine();
+            // return;
+
             // /$metadata#Company('CRONUS%20UK%20Ltd.')
             var req = ODataQueryRequest.Create("http://desktop-4rot5j5:7048/BC140/ODataV4", "SalesOrder", new FormField[]
             {

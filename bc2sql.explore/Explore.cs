@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bc2sql.shared;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -238,9 +239,22 @@ namespace bc2sql.explore
             webFetcher.RunWorkerAsync();
         }
 
+        private void RunScraperSetup(DataSourceConfig dataSource = null, string entity = null)
+        {
+            var setupModel = _controller.CreateSetupModel();
+            var setupView = new SetupView(setupModel);
+            var setupController = new SetupController(setupModel);
+            var setup = Setup.CreateScraper(setupView, setupController);
+
+            var result = setup.ShowDialog();
+
+            if(result != DialogResult.OK)
+                MessageBox.Show("The operation was aborted or has been canceled");
+        }
+
         private void createScraperFromEntity_Click(object sender, EventArgs e)
         {
-
+            RunScraperSetup();
         }
 
         private void removeDatabase_Click(object sender, EventArgs e)
@@ -303,8 +317,7 @@ namespace bc2sql.explore
 
         private void addScraper_Click(object sender, EventArgs e)
         {
-            Ask ask = new Ask();
-            ask.ShowDialog();
+            RunScraperSetup();
         }
 
         private void databaseConfig_Click(object sender, EventArgs e)

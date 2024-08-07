@@ -18,10 +18,16 @@ namespace bc2sql.shared.OData
         [XmlElement(ElementName = "EntityType")]
         public EntityType[] Defs { get; set; }
 
-        [XmlElement(ElementName = "EntitySet")]
-        public EntitySet[] Sets { get; set; }
+        [XmlElement(ElementName = "EntityContainer")]
+        public EntityContainer[] Containers { get; set; }
 
         [XmlElement(ElementName = "ComplexType")]
         public ComplexType[] ComplexTypes { get; set; }
+
+        public delegate T OnSelectSet<T>(EntitySet set, string nameSpace);
+        public void SelectAllSets<T>(OnSelectSet<T> selector)
+        {
+
+        }
     }
 }

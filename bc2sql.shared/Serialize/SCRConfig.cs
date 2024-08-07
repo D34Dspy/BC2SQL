@@ -18,6 +18,7 @@ namespace bc2sql.shared.Serialize
         public string ConnectString { get; set; }
         public ScraperStrategy Strategy { get; set; }
         public string TableName { get; set; }
-
+        public string MergeSourceAlias { get; set; }
+        public string MergeDestinationAlias { get; set; }
     }
 }

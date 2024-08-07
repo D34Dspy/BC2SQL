@@ -31,32 +31,32 @@
             this.components = new System.ComponentModel.Container();
             this.inspectPages = new System.Windows.Forms.TabControl();
             this.metaDataPage = new System.Windows.Forms.TabPage();
-            this.dataPage = new System.Windows.Forms.TabPage();
-            this.dataSourceInfo = new System.Windows.Forms.GroupBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.fields = new System.Windows.Forms.DataGridView();
             this.fieldProperties = new System.Windows.Forms.PropertyGrid();
-            this.dataSets = new System.Windows.Forms.DataGridView();
-            this.dataSourceName = new System.Windows.Forms.Label();
-            this.dataSourceGuid = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.dataSourceLink = new System.Windows.Forms.LinkLabel();
-            this.dataSourceMetadata = new System.Windows.Forms.LinkLabel();
-            this.dataSourceDescription = new System.Windows.Forms.Label();
+            this.dataSourceInfo = new System.Windows.Forms.GroupBox();
             this.dataSourceEntity = new System.Windows.Forms.LinkLabel();
+            this.dataSourceDescription = new System.Windows.Forms.Label();
+            this.dataSourceMetadata = new System.Windows.Forms.LinkLabel();
+            this.dataSourceLink = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.dataSourceGuid = new System.Windows.Forms.Label();
+            this.dataSourceName = new System.Windows.Forms.Label();
+            this.dataPage = new System.Windows.Forms.TabPage();
+            this.dataSets = new System.Windows.Forms.DataGridView();
             this.inspectActions = new System.Windows.Forms.Panel();
-            this.closeNewScraper = new System.Windows.Forms.Button();
             this.close = new System.Windows.Forms.Button();
+            this.closeNewScraper = new System.Windows.Forms.Button();
             this.help = new System.Windows.Forms.ToolTip(this.components);
             this.inspectPages.SuspendLayout();
             this.metaDataPage.SuspendLayout();
-            this.dataPage.SuspendLayout();
-            this.dataSourceInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fields)).BeginInit();
+            this.dataSourceInfo.SuspendLayout();
+            this.dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSets)).BeginInit();
             this.inspectActions.SuspendLayout();
             this.SuspendLayout();
@@ -84,39 +84,10 @@
             this.metaDataPage.Text = "Metadata";
             this.metaDataPage.UseVisualStyleBackColor = true;
             // 
-            // dataPage
-            // 
-            this.dataPage.Controls.Add(this.dataSets);
-            this.dataPage.Location = new System.Drawing.Point(4, 22);
-            this.dataPage.Name = "dataPage";
-            this.dataPage.Padding = new System.Windows.Forms.Padding(3);
-            this.dataPage.Size = new System.Drawing.Size(837, 556);
-            this.dataPage.TabIndex = 1;
-            this.dataPage.Text = "Data";
-            this.dataPage.UseVisualStyleBackColor = true;
-            this.dataPage.Click += new System.EventHandler(this.dataPage_Click);
-            // 
-            // dataSourceInfo
-            // 
-            this.dataSourceInfo.Controls.Add(this.dataSourceEntity);
-            this.dataSourceInfo.Controls.Add(this.dataSourceDescription);
-            this.dataSourceInfo.Controls.Add(this.dataSourceMetadata);
-            this.dataSourceInfo.Controls.Add(this.dataSourceLink);
-            this.dataSourceInfo.Controls.Add(this.label3);
-            this.dataSourceInfo.Controls.Add(this.dataSourceGuid);
-            this.dataSourceInfo.Controls.Add(this.dataSourceName);
-            this.dataSourceInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.dataSourceInfo.Location = new System.Drawing.Point(3, 3);
-            this.dataSourceInfo.Name = "dataSourceInfo";
-            this.dataSourceInfo.Size = new System.Drawing.Size(831, 100);
-            this.dataSourceInfo.TabIndex = 0;
-            this.dataSourceInfo.TabStop = false;
-            this.dataSourceInfo.Text = "Data Source";
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 103);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 84);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -126,7 +97,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.fieldProperties);
-            this.splitContainer1.Size = new System.Drawing.Size(831, 405);
+            this.splitContainer1.Size = new System.Drawing.Size(831, 424);
             this.splitContainer1.SplitterDistance = 296;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -140,7 +111,7 @@
             this.fields.Name = "fields";
             this.fields.ReadOnly = true;
             this.fields.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.fields.Size = new System.Drawing.Size(296, 405);
+            this.fields.Size = new System.Drawing.Size(296, 424);
             this.fields.TabIndex = 0;
             this.fields.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.fields_RowEnter);
             // 
@@ -149,44 +120,58 @@
             this.fieldProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fieldProperties.Location = new System.Drawing.Point(0, 0);
             this.fieldProperties.Name = "fieldProperties";
-            this.fieldProperties.Size = new System.Drawing.Size(531, 405);
+            this.fieldProperties.Size = new System.Drawing.Size(531, 424);
             this.fieldProperties.TabIndex = 0;
             // 
-            // dataSets
+            // dataSourceInfo
             // 
-            this.dataSets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.dataSets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataSets.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataSets.Location = new System.Drawing.Point(3, 3);
-            this.dataSets.Name = "dataSets";
-            this.dataSets.Size = new System.Drawing.Size(831, 550);
-            this.dataSets.TabIndex = 0;
+            this.dataSourceInfo.Controls.Add(this.dataSourceEntity);
+            this.dataSourceInfo.Controls.Add(this.dataSourceDescription);
+            this.dataSourceInfo.Controls.Add(this.dataSourceMetadata);
+            this.dataSourceInfo.Controls.Add(this.dataSourceLink);
+            this.dataSourceInfo.Controls.Add(this.label3);
+            this.dataSourceInfo.Controls.Add(this.dataSourceGuid);
+            this.dataSourceInfo.Controls.Add(this.dataSourceName);
+            this.dataSourceInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dataSourceInfo.Location = new System.Drawing.Point(3, 3);
+            this.dataSourceInfo.Name = "dataSourceInfo";
+            this.dataSourceInfo.Size = new System.Drawing.Size(831, 81);
+            this.dataSourceInfo.TabIndex = 0;
+            this.dataSourceInfo.TabStop = false;
+            this.dataSourceInfo.Text = "Data Source";
             // 
-            // dataSourceName
+            // dataSourceEntity
             // 
-            this.dataSourceName.AutoSize = true;
-            this.dataSourceName.Location = new System.Drawing.Point(6, 16);
-            this.dataSourceName.Name = "dataSourceName";
-            this.dataSourceName.Size = new System.Drawing.Size(35, 13);
-            this.dataSourceName.TabIndex = 0;
-            this.dataSourceName.Text = "Name";
+            this.dataSourceEntity.AutoSize = true;
+            this.dataSourceEntity.Location = new System.Drawing.Point(388, 56);
+            this.dataSourceEntity.Name = "dataSourceEntity";
+            this.dataSourceEntity.Size = new System.Drawing.Size(67, 13);
+            this.dataSourceEntity.TabIndex = 6;
+            this.dataSourceEntity.TabStop = true;
+            this.dataSourceEntity.Text = "OData Entity";
+            this.dataSourceEntity.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dataSourceEntity_LinkClicked);
+            this.dataSourceEntity.MouseEnter += new System.EventHandler(this.dataSourceEntity_MouseEnter);
             // 
-            // dataSourceGuid
+            // dataSourceDescription
             // 
-            this.dataSourceGuid.AutoSize = true;
-            this.dataSourceGuid.Location = new System.Drawing.Point(6, 36);
-            this.dataSourceGuid.Name = "dataSourceGuid";
-            this.dataSourceGuid.Size = new System.Drawing.Size(34, 13);
-            this.dataSourceGuid.TabIndex = 1;
-            this.dataSourceGuid.Text = "GUID";
+            this.dataSourceDescription.AutoSize = true;
+            this.dataSourceDescription.Location = new System.Drawing.Point(6, 56);
+            this.dataSourceDescription.Name = "dataSourceDescription";
+            this.dataSourceDescription.Size = new System.Drawing.Size(60, 13);
+            this.dataSourceDescription.TabIndex = 5;
+            this.dataSourceDescription.Text = "Description";
             // 
-            // label3
+            // dataSourceMetadata
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 42);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 13);
-            this.label3.TabIndex = 2;
+            this.dataSourceMetadata.AutoSize = true;
+            this.dataSourceMetadata.Location = new System.Drawing.Point(388, 36);
+            this.dataSourceMetadata.Name = "dataSourceMetadata";
+            this.dataSourceMetadata.Size = new System.Drawing.Size(86, 13);
+            this.dataSourceMetadata.TabIndex = 4;
+            this.dataSourceMetadata.TabStop = true;
+            this.dataSourceMetadata.Text = "OData Metadata";
+            this.dataSourceMetadata.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dataSourceMetadata_LinkClicked);
+            this.dataSourceMetadata.MouseEnter += new System.EventHandler(this.dataSourceMetadata_MouseEnter);
             // 
             // dataSourceLink
             // 
@@ -201,38 +186,53 @@
             this.dataSourceLink.DragLeave += new System.EventHandler(this.dataSourceLink_DragLeave);
             this.dataSourceLink.MouseEnter += new System.EventHandler(this.dataSourceLink_MouseEnter);
             // 
-            // dataSourceMetadata
+            // label3
             // 
-            this.dataSourceMetadata.AutoSize = true;
-            this.dataSourceMetadata.Location = new System.Drawing.Point(388, 36);
-            this.dataSourceMetadata.Name = "dataSourceMetadata";
-            this.dataSourceMetadata.Size = new System.Drawing.Size(86, 13);
-            this.dataSourceMetadata.TabIndex = 4;
-            this.dataSourceMetadata.TabStop = true;
-            this.dataSourceMetadata.Text = "OData Metadata";
-            this.dataSourceMetadata.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dataSourceMetadata_LinkClicked);
-            this.dataSourceMetadata.MouseEnter += new System.EventHandler(this.dataSourceMetadata_MouseEnter);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.TabIndex = 2;
             // 
-            // dataSourceDescription
+            // dataSourceGuid
             // 
-            this.dataSourceDescription.AutoSize = true;
-            this.dataSourceDescription.Location = new System.Drawing.Point(6, 56);
-            this.dataSourceDescription.Name = "dataSourceDescription";
-            this.dataSourceDescription.Size = new System.Drawing.Size(60, 13);
-            this.dataSourceDescription.TabIndex = 5;
-            this.dataSourceDescription.Text = "Description";
+            this.dataSourceGuid.AutoSize = true;
+            this.dataSourceGuid.Location = new System.Drawing.Point(6, 36);
+            this.dataSourceGuid.Name = "dataSourceGuid";
+            this.dataSourceGuid.Size = new System.Drawing.Size(34, 13);
+            this.dataSourceGuid.TabIndex = 1;
+            this.dataSourceGuid.Text = "GUID";
             // 
-            // dataSourceEntity
+            // dataSourceName
             // 
-            this.dataSourceEntity.AutoSize = true;
-            this.dataSourceEntity.Location = new System.Drawing.Point(388, 56);
-            this.dataSourceEntity.Name = "dataSourceEntity";
-            this.dataSourceEntity.Size = new System.Drawing.Size(67, 13);
-            this.dataSourceEntity.TabIndex = 6;
-            this.dataSourceEntity.TabStop = true;
-            this.dataSourceEntity.Text = "OData Entity";
-            this.dataSourceEntity.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dataSourceEntity_LinkClicked);
-            this.dataSourceEntity.MouseEnter += new System.EventHandler(this.dataSourceEntity_MouseEnter);
+            this.dataSourceName.AutoSize = true;
+            this.dataSourceName.Location = new System.Drawing.Point(6, 16);
+            this.dataSourceName.Name = "dataSourceName";
+            this.dataSourceName.Size = new System.Drawing.Size(35, 13);
+            this.dataSourceName.TabIndex = 0;
+            this.dataSourceName.Text = "Name";
+            // 
+            // dataPage
+            // 
+            this.dataPage.Controls.Add(this.dataSets);
+            this.dataPage.Location = new System.Drawing.Point(4, 22);
+            this.dataPage.Name = "dataPage";
+            this.dataPage.Padding = new System.Windows.Forms.Padding(3);
+            this.dataPage.Size = new System.Drawing.Size(837, 511);
+            this.dataPage.TabIndex = 1;
+            this.dataPage.Text = "Data";
+            this.dataPage.UseVisualStyleBackColor = true;
+            this.dataPage.Click += new System.EventHandler(this.dataPage_Click);
+            // 
+            // dataSets
+            // 
+            this.dataSets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataSets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataSets.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataSets.Location = new System.Drawing.Point(3, 3);
+            this.dataSets.Name = "dataSets";
+            this.dataSets.Size = new System.Drawing.Size(831, 505);
+            this.dataSets.TabIndex = 0;
             // 
             // inspectActions
             // 
@@ -243,18 +243,6 @@
             this.inspectActions.Name = "inspectActions";
             this.inspectActions.Size = new System.Drawing.Size(845, 45);
             this.inspectActions.TabIndex = 1;
-            // 
-            // closeNewScraper
-            // 
-            this.closeNewScraper.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeNewScraper.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.closeNewScraper.Location = new System.Drawing.Point(626, 10);
-            this.closeNewScraper.Name = "closeNewScraper";
-            this.closeNewScraper.Size = new System.Drawing.Size(207, 23);
-            this.closeNewScraper.TabIndex = 0;
-            this.closeNewScraper.Text = "Create new scraper and close";
-            this.closeNewScraper.UseVisualStyleBackColor = true;
-            this.closeNewScraper.Click += new System.EventHandler(this.closeNewScraper_Click);
             // 
             // close
             // 
@@ -267,6 +255,18 @@
             this.close.Text = "Close";
             this.close.UseVisualStyleBackColor = true;
             this.close.Click += new System.EventHandler(this.close_Click);
+            // 
+            // closeNewScraper
+            // 
+            this.closeNewScraper.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeNewScraper.DialogResult = System.Windows.Forms.DialogResult.Yes;
+            this.closeNewScraper.Location = new System.Drawing.Point(626, 10);
+            this.closeNewScraper.Name = "closeNewScraper";
+            this.closeNewScraper.Size = new System.Drawing.Size(207, 23);
+            this.closeNewScraper.TabIndex = 0;
+            this.closeNewScraper.Text = "Create new scraper and close";
+            this.closeNewScraper.UseVisualStyleBackColor = true;
+            this.closeNewScraper.Click += new System.EventHandler(this.closeNewScraper_Click);
             // 
             // Inspect
             // 
@@ -283,14 +283,14 @@
             this.Load += new System.EventHandler(this.Inspect_Load);
             this.inspectPages.ResumeLayout(false);
             this.metaDataPage.ResumeLayout(false);
-            this.dataPage.ResumeLayout(false);
-            this.dataSourceInfo.ResumeLayout(false);
-            this.dataSourceInfo.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fields)).EndInit();
+            this.dataSourceInfo.ResumeLayout(false);
+            this.dataSourceInfo.PerformLayout();
+            this.dataPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataSets)).EndInit();
             this.inspectActions.ResumeLayout(false);
             this.ResumeLayout(false);

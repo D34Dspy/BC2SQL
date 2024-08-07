@@ -374,5 +374,10 @@ namespace bc2sql.explore
         {
             return new InspectController(_model);
         }
+
+        internal SetupModel CreateSetupModel()
+        {
+            return new SetupModel(_model);
+        }
     }
 }

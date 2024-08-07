@@ -43,13 +43,9 @@
             this.dataSourceMetaDataPage = new System.Windows.Forms.TabPage();
             this.dataSourceMetaData = new System.Windows.Forms.DataGridView();
             this.metadataTools = new System.Windows.Forms.ToolStrip();
-            this.dataSourceMetaDataInspect = new System.Windows.Forms.ToolStripButton();
-            this.obtainDatasourceMetadata = new System.Windows.Forms.ToolStripButton();
             this.createScraperFromEntity = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.dataSourceMetaDataFilter = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.dataSourceMetaDataSearch = new System.Windows.Forms.ToolStripButton();
             this.dataSourceCodeCodePage = new System.Windows.Forms.TabPage();
             this.dataSourceCode = new System.Windows.Forms.RichTextBox();
             this.dataSourcesTools = new System.Windows.Forms.ToolStrip();
@@ -113,6 +109,14 @@
             this.librarySourcePage = new System.Windows.Forms.TabPage();
             this.librarySource = new System.Windows.Forms.RichTextBox();
             this.webFetcher = new System.ComponentModel.BackgroundWorker();
+            this.dataSourceEntitySetPage = new System.Windows.Forms.TabPage();
+            this.dataSourceEntitySets = new System.Windows.Forms.DataGridView();
+            this.entitySetTools = new System.Windows.Forms.ToolStrip();
+            this.lookupEntityType = new System.Windows.Forms.ToolStripButton();
+            this.dataSourceEntitySetFilter = new System.Windows.Forms.ToolStripTextBox();
+            this.dataSourceMetaDataInspect = new System.Windows.Forms.ToolStripButton();
+            this.obtainDatasourceMetadata = new System.Windows.Forms.ToolStripButton();
+            this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.allPages.SuspendLayout();
             this.configurationPage.SuspendLayout();
             this.libraryTools.SuspendLayout();
@@ -149,6 +153,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.schedulers)).BeginInit();
             this.schedulerTools.SuspendLayout();
             this.librarySourcePage.SuspendLayout();
+            this.dataSourceEntitySetPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSourceEntitySets)).BeginInit();
+            this.entitySetTools.SuspendLayout();
             this.SuspendLayout();
             // 
             // allPages
@@ -267,6 +274,7 @@
             // 
             this.dataSourcePages.Controls.Add(this.dataSourceConfigPage);
             this.dataSourcePages.Controls.Add(this.dataSourceMetaDataPage);
+            this.dataSourcePages.Controls.Add(this.dataSourceEntitySetPage);
             this.dataSourcePages.Controls.Add(this.dataSourceCodeCodePage);
             this.dataSourcePages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataSourcePages.Location = new System.Drawing.Point(0, 0);
@@ -323,37 +331,14 @@
             // 
             this.metadataTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dataSourceMetaDataInspect,
-            this.obtainDatasourceMetadata,
             this.createScraperFromEntity,
             this.toolStripSeparator7,
-            this.dataSourceMetaDataFilter,
-            this.toolStripSeparator8,
-            this.dataSourceMetaDataSearch});
+            this.dataSourceMetaDataFilter});
             this.metadataTools.Location = new System.Drawing.Point(3, 3);
             this.metadataTools.Name = "metadataTools";
             this.metadataTools.Size = new System.Drawing.Size(522, 25);
             this.metadataTools.TabIndex = 0;
             this.metadataTools.Text = "toolStrip1";
-            // 
-            // dataSourceMetaDataInspect
-            // 
-            this.dataSourceMetaDataInspect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.dataSourceMetaDataInspect.Image = global::bc2sql.explore.Properties.Resources.info;
-            this.dataSourceMetaDataInspect.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.dataSourceMetaDataInspect.Name = "dataSourceMetaDataInspect";
-            this.dataSourceMetaDataInspect.Size = new System.Drawing.Size(23, 22);
-            this.dataSourceMetaDataInspect.Text = "Inspect Entity";
-            this.dataSourceMetaDataInspect.Click += new System.EventHandler(this.dataSourceMetaDataInspect_Click);
-            // 
-            // obtainDatasourceMetadata
-            // 
-            this.obtainDatasourceMetadata.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.obtainDatasourceMetadata.Image = global::bc2sql.explore.Properties.Resources.download;
-            this.obtainDatasourceMetadata.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.obtainDatasourceMetadata.Name = "obtainDatasourceMetadata";
-            this.obtainDatasourceMetadata.Size = new System.Drawing.Size(23, 22);
-            this.obtainDatasourceMetadata.Text = "Fetch Metadata...";
-            this.obtainDatasourceMetadata.Click += new System.EventHandler(this.obtainDatasourceMetadata_Click);
             // 
             // createScraperFromEntity
             // 
@@ -372,23 +357,10 @@
             // 
             // dataSourceMetaDataFilter
             // 
+            this.dataSourceMetaDataFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.dataSourceMetaDataFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.dataSourceMetaDataFilter.Name = "dataSourceMetaDataFilter";
             this.dataSourceMetaDataFilter.Size = new System.Drawing.Size(380, 25);
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
-            // 
-            // dataSourceMetaDataSearch
-            // 
-            this.dataSourceMetaDataSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.dataSourceMetaDataSearch.Image = global::bc2sql.explore.Properties.Resources.search;
-            this.dataSourceMetaDataSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.dataSourceMetaDataSearch.Name = "dataSourceMetaDataSearch";
-            this.dataSourceMetaDataSearch.Size = new System.Drawing.Size(23, 22);
-            this.dataSourceMetaDataSearch.Text = "toolStripButton2";
             // 
             // dataSourceCodeCodePage
             // 
@@ -421,6 +393,7 @@
             this.cloneDataSource,
             this.saveDataSource,
             this.refreshDataSource,
+            this.obtainDatasourceMetadata,
             this.allDataSources,
             this.toolStripSeparator6,
             this.dataSourceConnectionState});
@@ -484,7 +457,8 @@
             this.allDataSources.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.allDataSources.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeAllDataSources,
-            this.refreshAllDataSources});
+            this.refreshAllDataSources,
+            this.fetchAllToolStripMenuItem});
             this.allDataSources.Image = global::bc2sql.explore.Properties.Resources.select_all;
             this.allDataSources.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.allDataSources.Name = "allDataSources";
@@ -496,14 +470,14 @@
             // 
             this.removeAllDataSources.Image = global::bc2sql.explore.Properties.Resources.cross_circle;
             this.removeAllDataSources.Name = "removeAllDataSources";
-            this.removeAllDataSources.Size = new System.Drawing.Size(132, 22);
+            this.removeAllDataSources.Size = new System.Drawing.Size(196, 38);
             this.removeAllDataSources.Text = "Remove all";
             // 
             // refreshAllDataSources
             // 
             this.refreshAllDataSources.Image = global::bc2sql.explore.Properties.Resources.refresh;
             this.refreshAllDataSources.Name = "refreshAllDataSources";
-            this.refreshAllDataSources.Size = new System.Drawing.Size(132, 22);
+            this.refreshAllDataSources.Size = new System.Drawing.Size(196, 38);
             this.refreshAllDataSources.Text = "Refresh all";
             // 
             // toolStripSeparator6
@@ -1021,6 +995,84 @@
             this.webFetcher.DoWork += new System.ComponentModel.DoWorkEventHandler(this.webFetcher_DoWork);
             this.webFetcher.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.webFetcher_RunWorkerCompleted);
             // 
+            // dataSourceEntitySetPage
+            // 
+            this.dataSourceEntitySetPage.Controls.Add(this.dataSourceEntitySets);
+            this.dataSourceEntitySetPage.Controls.Add(this.entitySetTools);
+            this.dataSourceEntitySetPage.Location = new System.Drawing.Point(4, 22);
+            this.dataSourceEntitySetPage.Name = "dataSourceEntitySetPage";
+            this.dataSourceEntitySetPage.Padding = new System.Windows.Forms.Padding(3);
+            this.dataSourceEntitySetPage.Size = new System.Drawing.Size(528, 383);
+            this.dataSourceEntitySetPage.TabIndex = 3;
+            this.dataSourceEntitySetPage.Text = "Entity Sets";
+            this.dataSourceEntitySetPage.UseVisualStyleBackColor = true;
+            // 
+            // dataSourceEntitySets
+            // 
+            this.dataSourceEntitySets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataSourceEntitySets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataSourceEntitySets.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataSourceEntitySets.Location = new System.Drawing.Point(3, 28);
+            this.dataSourceEntitySets.MultiSelect = false;
+            this.dataSourceEntitySets.Name = "dataSourceEntitySets";
+            this.dataSourceEntitySets.ReadOnly = true;
+            this.dataSourceEntitySets.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataSourceEntitySets.Size = new System.Drawing.Size(522, 352);
+            this.dataSourceEntitySets.TabIndex = 1;
+            // 
+            // entitySetTools
+            // 
+            this.entitySetTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lookupEntityType,
+            this.dataSourceEntitySetFilter});
+            this.entitySetTools.Location = new System.Drawing.Point(3, 3);
+            this.entitySetTools.Name = "entitySetTools";
+            this.entitySetTools.Size = new System.Drawing.Size(522, 25);
+            this.entitySetTools.TabIndex = 0;
+            this.entitySetTools.Text = "toolStrip1";
+            // 
+            // lookupEntityType
+            // 
+            this.lookupEntityType.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.lookupEntityType.Image = global::bc2sql.explore.Properties.Resources.info;
+            this.lookupEntityType.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.lookupEntityType.Name = "lookupEntityType";
+            this.lookupEntityType.Size = new System.Drawing.Size(23, 22);
+            this.lookupEntityType.Text = "Inspect Entity";
+            // 
+            // dataSourceEntitySetFilter
+            // 
+            this.dataSourceEntitySetFilter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.dataSourceEntitySetFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.dataSourceEntitySetFilter.Name = "dataSourceEntitySetFilter";
+            this.dataSourceEntitySetFilter.Size = new System.Drawing.Size(380, 25);
+            // 
+            // dataSourceMetaDataInspect
+            // 
+            this.dataSourceMetaDataInspect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.dataSourceMetaDataInspect.Image = global::bc2sql.explore.Properties.Resources.info;
+            this.dataSourceMetaDataInspect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.dataSourceMetaDataInspect.Name = "dataSourceMetaDataInspect";
+            this.dataSourceMetaDataInspect.Size = new System.Drawing.Size(23, 22);
+            this.dataSourceMetaDataInspect.Text = "Inspect Entity";
+            this.dataSourceMetaDataInspect.Click += new System.EventHandler(this.dataSourceMetaDataInspect_Click);
+            // 
+            // obtainDatasourceMetadata
+            // 
+            this.obtainDatasourceMetadata.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.obtainDatasourceMetadata.Image = global::bc2sql.explore.Properties.Resources.download;
+            this.obtainDatasourceMetadata.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.obtainDatasourceMetadata.Name = "obtainDatasourceMetadata";
+            this.obtainDatasourceMetadata.Size = new System.Drawing.Size(36, 36);
+            this.obtainDatasourceMetadata.Text = "Fetch Metadata...";
+            // 
+            // fetchAllToolStripMenuItem
+            // 
+            this.fetchAllToolStripMenuItem.Image = global::bc2sql.explore.Properties.Resources.download;
+            this.fetchAllToolStripMenuItem.Name = "fetchAllToolStripMenuItem";
+            this.fetchAllToolStripMenuItem.Size = new System.Drawing.Size(196, 38);
+            this.fetchAllToolStripMenuItem.Text = "Fetch all";
+            // 
             // Explore
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1079,6 +1131,11 @@
             this.schedulerTools.ResumeLayout(false);
             this.schedulerTools.PerformLayout();
             this.librarySourcePage.ResumeLayout(false);
+            this.dataSourceEntitySetPage.ResumeLayout(false);
+            this.dataSourceEntitySetPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSourceEntitySets)).EndInit();
+            this.entitySetTools.ResumeLayout(false);
+            this.entitySetTools.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1158,18 +1215,22 @@
         private System.Windows.Forms.DataGridView dataSources;
         private System.Windows.Forms.DataGridView dataSourceMetaData;
         private System.Windows.Forms.ToolStrip metadataTools;
-        private System.Windows.Forms.ToolStripButton dataSourceMetaDataInspect;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripTextBox dataSourceMetaDataFilter;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripButton dataSourceMetaDataSearch;
         private System.Windows.Forms.ToolStripButton createScraperFromEntity;
-        private System.Windows.Forms.ToolStripButton obtainDatasourceMetadata;
         private System.Windows.Forms.ToolStripButton refreshDataSource;
         private System.Windows.Forms.ToolStripButton saveDatabase;
         private System.Windows.Forms.ToolStripButton cloneDataSource;
         private System.Windows.Forms.ToolStripButton cloneDatabase;
         private System.ComponentModel.BackgroundWorker webFetcher;
+        private System.Windows.Forms.ToolStripButton dataSourceMetaDataInspect;
+        private System.Windows.Forms.TabPage dataSourceEntitySetPage;
+        private System.Windows.Forms.DataGridView dataSourceEntitySets;
+        private System.Windows.Forms.ToolStrip entitySetTools;
+        private System.Windows.Forms.ToolStripButton lookupEntityType;
+        private System.Windows.Forms.ToolStripTextBox dataSourceEntitySetFilter;
+        private System.Windows.Forms.ToolStripButton obtainDatasourceMetadata;
+        private System.Windows.Forms.ToolStripMenuItem fetchAllToolStripMenuItem;
     }
 }
 

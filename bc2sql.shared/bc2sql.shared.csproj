@@ -51,6 +51,7 @@
     <Compile Include="OData\ComplexType.cs" />
     <Compile Include="OData\DataServices.cs" />
     <Compile Include="OData\Edmx.cs" />
+    <Compile Include="OData\EntityContainer.cs" />
     <Compile Include="OData\EntitySet.cs" />
     <Compile Include="OData\EntityType.cs" />
     <Compile Include="OData\EnumMember.cs" />
