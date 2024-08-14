@@ -5,6 +5,7 @@ using bc2sql.shared.Serialize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,7 +14,7 @@ namespace bc2sql.explore
 {
     internal class InspectView
     {
-        private Model _model;
+        private ExploreModel _model;
 
         public InspectEntity Entity;
         public InspectDataSource DataSource;
@@ -39,7 +40,23 @@ namespace bc2sql.explore
             }
         }
 
-        public InspectView(Model model)
+        public EntitySet EntitySet
+        {
+            get
+            {
+                return _model.InspectDataSet;
+            }
+        }
+
+        public EntityType EntityType
+        {
+            get
+            {
+                return _model.InspectDataType;
+            }
+        }
+
+        public InspectView(ExploreModel model)
         {
             _model = model;
 
@@ -60,19 +77,26 @@ namespace bc2sql.explore
 
         public void RefreshDataSets()
         {
-
-            Query = ODataQueryRequest
-                .Create(_model.InspectDataSource.Endpoint, _model.InspectEntityName, 
-                    new FormField[]
-                    {
+            try
+            {
+                Query = ODataQueryRequest
+                    .Create(_model.InspectDataSource.Endpoint, _model.InspectSetName,
+                        new FormField[]
+                        {
                         FormField.Create("$top","10")
-                    }, false, 5000
-                )
-                .GetResponse();
+                        }, false, 5000
+                    )
+                    .GetResponse();
 
-            DataSets = new BindingSource();
-            DataSets.DataSource = Query.Rows.Select(row => row.Select(cell => cell.ToString()).ToArray()).ToList();
+                DataSets = new BindingSource();
+                DataSets.DataSource = Query.Rows.Select(row => row.Select(cell => cell.ToString()).ToArray()).ToList();
 
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(string.Format("Datasets cannot be retrieved for entity \"{0}\".\n{1}", _model.InspectEntityName, ex.ToString()), "OData Query Error");
+                Query = ODataQuery.Empty;
+            }
             // TODO web request
         }
 

@@ -43,7 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AL\DataType.cs" />
+    <Compile Include="AL\DataTypes.cs" />
+    <Compile Include="Auth\OAuth2.cs" />
+    <Compile Include="Auth\OAuth2Token.cs" />
+    <Compile Include="Auth\OAuth2Type.cs" />
+    <Compile Include="Auth\Types.cs" />
     <Compile Include="CommandLine.cs" />
+    <Compile Include="ExplorerConfig.cs" />
     <Compile Include="Ext\Buffer.cs" />
     <Compile Include="Ext\UnSafeCharBuffer.cs" />
     <Compile Include="OData\Annotation.cs" />
@@ -56,6 +63,8 @@
     <Compile Include="OData\EntityType.cs" />
     <Compile Include="OData\EnumMember.cs" />
     <Compile Include="OData\EnumType.cs" />
+    <Compile Include="OData\Filter.cs" />
+    <Compile Include="OData\FilterOperation.cs" />
     <Compile Include="OData\Forge.cs" />
     <Compile Include="BountScraper.cs" />
     <Compile Include="DatabaseConfig.cs" />
@@ -81,6 +90,7 @@
     <Compile Include="Serialize\BoundOrigin.cs" />
     <Compile Include="Serialize\DBConfig.cs" />
     <Compile Include="Serialize\DSConfig.cs" />
+    <Compile Include="Serialize\EXPConfig.cs" />
     <Compile Include="Serialize\FormField.cs" />
     <Compile Include="Serialize\Origin.cs" />
     <Compile Include="Serialize\LIBConfig.cs" />
@@ -94,11 +104,10 @@
     <Compile Include="SQL\Scheme.cs" />
     <Compile Include="SchedulerConfig.cs" />
     <Compile Include="Ext\StringUtil.cs" />
+    <Compile Include="WorkspaceLogger.cs" />
     <Compile Include="WorkspaceUtil.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AL\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

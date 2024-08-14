@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace bc2sql.explore
         public Explore()
         {
             InitializeComponent();
+            CenterToScreen();
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -33,14 +35,12 @@ namespace bc2sql.explore
             Util.Bind(databases, "Name", "Name", "Name of the database");
             Util.Bind(databases, "Identifier", "ID", "(Unique) identifier of the database");
 
-            Util.Bind(dataSourceMetaData, "Name", "Name", "Name of the (OData) entity");
-        }
+            Util.Bind(dataSourceMetaData, "Name", "Name", "Name of the (OData) entity type");
+            Util.Bind(dataSourceEntitySets, "Name", "Name", "Name of the (OData) entity set");
 
-        private int WarnDataSetChangesLoss(int dataset, int xDataset)
-        {
-            if (MessageBox.Show("You're about to select another data set!\nPotential changes might not persist.\nAre you sure you want to continue?", "Data Loss", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                return dataset;
-            return xDataset;
+            Util.Bind(scrapers, "Name", "Name", "Name of the scraper");
+            Util.Bind(scrapers, "DataSourceIdentifier", "DSID", "(Unique) identifier of the data source");
+            Util.Bind(scrapers, "DatabaseIdentifier", "DBID", "(Unique) identifier of the database");
         }
 
         private void BindDataSets()
@@ -50,10 +50,16 @@ namespace bc2sql.explore
             {
                 dataSourceConfig.SelectedObject = _view.CurrentDataSource;
                 if(_view.HasSelectedMetadata())
+                {
                     dataSourceMetaData.DataSource = _view.CurrentDataSource.Metadata.Defs;
+                    dataSourceEntitySets.DataSource = _view.CurrentDataSource.Sets;
+                }
             }
 
             databases.DataSource = _view.Databases;
+            if(_view.HasSelectedDatabase())
+                databaseConfig.SelectedObject = _view.CurrentDataBase;
+
             schedulers.DataSource = _view.Schedulers;
             scrapers.DataSource = _view.Scrapers;
         }
@@ -64,6 +70,7 @@ namespace bc2sql.explore
 
             InitDataSets();
             BindDataSets();
+            Activate();
         }
 
         internal void SetVC(ExploreView view, ExploreController controller)
@@ -89,8 +96,9 @@ namespace bc2sql.explore
             if (dataSources.SelectedRows.Count == 0) return;
             if(MessageBox.Show("Are you sure you want to delete this data source?\nHint: it cannot be undone!!!", "Confirm Deletion", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
-                dataSources.Rows.Remove(dataSources.SelectedRows[0]);
                 _controller.DeleteDataSource();
+                BindDataSets();
+                dataSources.Refresh();
             }
         }
 
@@ -214,14 +222,14 @@ namespace bc2sql.explore
         private void addDatabase_Click(object sender, EventArgs e)
         {
             _controller.CreateDatabase();
-            _view.RefreshDataSources();
+            _view.RefreshDatabases();
             BindDataSets();
         }
 
         private void dataSourceMetaDataInspect_Click(object sender, EventArgs e)
         {
             var entityIdx = dataSourceMetaData.SelectedRows[0].Index;
-            _controller.CreateInspection(entityIdx);
+            _controller.CreateInspectionByType(entityIdx);
 
             Inspect inspector = new Inspect();
             inspector.SetVC(_view.CreateInspectView(), _controller.CreateInspectController());
@@ -242,14 +250,20 @@ namespace bc2sql.explore
         private void RunScraperSetup(DataSourceConfig dataSource = null, string entity = null)
         {
             var setupModel = _controller.CreateSetupModel();
-            var setupView = new SetupView(setupModel);
-            var setupController = new SetupController(setupModel);
+            var setupView = new SetupScraperView(setupModel, _view);
+            var setupController = new SetupScraperController(setupModel, _controller);
             var setup = Setup.CreateScraper(setupView, setupController);
+
+            setupModel.IsNew = dataSource == null;
 
             var result = setup.ShowDialog();
 
-            if(result != DialogResult.OK)
-                MessageBox.Show("The operation was aborted or has been canceled");
+            if(result == DialogResult.OK)
+            {
+                var cfg = setupController.CreateConfig();
+            }
+            else MessageBox.Show("The operation was aborted or has been canceled");
+
         }
 
         private void createScraperFromEntity_Click(object sender, EventArgs e)
@@ -264,6 +278,7 @@ namespace bc2sql.explore
             {
                 databases.Rows.Remove(databases.SelectedRows[0]);
                 _controller.DeleteDatabase();
+                BindDataSets();
             }
         }
 
@@ -323,6 +338,119 @@ namespace bc2sql.explore
         private void databaseConfig_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void obtainDatasourceMetadata_Click_1(object sender, EventArgs e)
+        {
+            if (!_view.HasSelectedDataSource() || _view.CurrentDataSource.Endpoint == null ||
+                _view.CurrentDataSource.Endpoint == string.Empty)
+            {
+                MessageBox.Show("No endpoint specified in data source.", "URL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            webFetcher.RunWorkerAsync();
+        }
+
+        private void inspectMetadata_Click(object sender, EventArgs e)
+        {
+            var entityIdx = dataSourceEntitySets.SelectedRows[0].Index;
+            _controller.CreateInspectionBySet(entityIdx);
+
+            Inspect inspector = new Inspect();
+            inspector.SetVC(_view.CreateInspectView(), _controller.CreateInspectController());
+            inspector.ShowDialog();
+        }
+
+        private void createScraper_Click(object sender, EventArgs e)
+        {
+            RunScraperSetup();
+        }
+
+        private void runScraper_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void databases_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            _controller.MakeDatabaseCurrent(e.RowIndex);
+            BindDataSets();
+        }
+
+        private void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Enabled = false;
+
+            // _controller.RunScraper();
+            var launcher = new Launch(_controller.RunScraper(),
+            (proc_) => {
+                var proc = (Process)proc_;
+                proc.WaitForExit();
+                return proc.HasExited 
+                ? (proc.ExitCode == 0 
+                    ? DialogResult.OK 
+                    : DialogResult.Abort) 
+                : DialogResult.Retry;
+            });
+
+            if(launcher.ShowDialog() != DialogResult.OK)
+                MessageBox.Show("The operation has been aborted or cancelled!");
+
+            Enabled = true;
+        }
+
+        private void scrapers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            _controller.MakeScraperCurrent(e.RowIndex);
+        }
+
+        private void scrapers_SelectionChanged(object sender, EventArgs e)
+        {
+            if(scrapers.SelectedRows.Count > 0)
+                _controller.MakeScraperCurrent(scrapers.SelectedRows[0].Index);
+        }
+
+        private void runKeepOpen_Click(object sender, EventArgs e)
+        {
+            Enabled = false;
+
+            // _controller.RunScraper();
+            var launcher = new Launch(_controller.RunScraper(true),
+            (proc_) => {
+                var proc = (Process)proc_;
+                proc.WaitForExit();
+                return proc.HasExited
+                ? (proc.ExitCode == 0
+                    ? DialogResult.OK
+                    : DialogResult.Abort)
+                : DialogResult.Retry;
+            });
+
+            if (launcher.ShowDialog() != DialogResult.OK)
+                MessageBox.Show("The operation has been aborted or cancelled!");
+
+            Enabled = true;
+        }
+
+        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            using (var proc = _controller.RunScraper(false, true))
+            {
+                MessageBox.Show(
+                    string.Format("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments),
+                    "Scraper Run Command - BC2SQL"
+                );
+            }
+        }
+
+        private void runAndKeepOpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void removeScraper_Click(object sender, EventArgs e)
+        {
+            _controller.DeleteScraper();
         }
     }
 }

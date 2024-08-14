@@ -19,6 +19,7 @@ namespace bc2sql.explore
         public Inspect()
         {
             InitializeComponent();
+            CenterToScreen();
         }
 
         internal void SetVC(InspectView view, InspectController ctrl)
@@ -61,6 +62,13 @@ namespace bc2sql.explore
             dataSourceDescription.Text = string.Format("Description: {0}", ds.Description);
             dataSourceGuid.Text = string.Format("GUID: {0}", ds.Guid);
 
+
+            entityType.Text = string.Format("Entity Type: {0}", _view.EntityType.Name);
+            if(_view.EntitySet != null)
+                entitySet.Text = string.Format("Entity Set: {0}", _view.EntitySet.Name);
+            else
+                entitySet.Text = "Entity Set: N/A";
+
             dataSourceLink.Text = "OData Service";
             Util.BindHelp(help, dataSourceLink, ds.Endpoint);
 
@@ -72,6 +80,7 @@ namespace bc2sql.explore
 
             InitDataSets();
             BindDataSets();
+            Activate();
         }
 
         private void dataPage_Click(object sender, EventArgs e)

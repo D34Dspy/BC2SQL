@@ -52,6 +52,7 @@
             this.databases.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.databases.Size = new System.Drawing.Size(500, 230);
             this.databases.TabIndex = 1;
+            this.databases.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.databases_CellContentClick);
             // 
             // databaseButtons
             // 

@@ -19,7 +19,7 @@ namespace bc2sql.explore.Views
             if (OnChangeDataSource != null) OnChangeDataSource(this, e);
         }
 
-        Model _model;
+        ExploreModel _model;
 
         [DescriptionAttribute("Filename of current database"),
             CategoryAttribute("Workspace")]
@@ -107,6 +107,23 @@ namespace bc2sql.explore.Views
             }
         }
 
+        EntitySet[] _entitySets;
+        Guid _origin;
+
+        [Browsable(false)]
+        public IEnumerable<EntitySet> Sets
+        {
+            get
+            {
+                if(_entitySets == null || _origin != _model.SelectedDataSource.Identifier)
+                {
+                    _entitySets = _model.SelectedDataSource.Metadata.SelectSets(set => set).ToArray();
+                    _origin = _model.SelectedDataSource.Identifier;
+                }
+                return _entitySets;
+            }
+        }
+
         [Browsable(false)]
         public Schema Metadata
         {
@@ -116,9 +133,10 @@ namespace bc2sql.explore.Views
             }
         }
 
-        public CurrentDataSource(Model model)
+        public CurrentDataSource(ExploreModel model)
         {
             _model = model;
+            _entitySets = null;
         }
     }
 }

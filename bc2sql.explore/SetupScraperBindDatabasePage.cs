@@ -14,14 +14,16 @@ namespace bc2sql.explore
 {
     internal partial class SetupScraperBindDatabasePage : UserControl, ISetupPage
     {
-        SetupView _view;
-        SetupController _controller;
+        SetupScraperView _view;
+        SetupScraperController _controller;
 
-        public SetupScraperBindDatabasePage(SetupView view, SetupController controller)
+        public SetupScraperBindDatabasePage(SetupScraperView view, SetupScraperController controller)
         {
             InitializeComponent();
             _view = view;
             _controller = controller;
+
+            
         }
 
         public SetupButton[] GetButtons()
@@ -48,7 +50,7 @@ namespace bc2sql.explore
         {
             if(button == SetupButton.Next)
             {
-
+                _controller.SetDatabase(databases.SelectedRows[0].Index);
             }
         }
         private void InitDataSets()
@@ -74,6 +76,11 @@ namespace bc2sql.explore
             {
 
             }
+        }
+
+        private void databases_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            _controller.SetDatabase(e.RowIndex);
         }
     }
 }

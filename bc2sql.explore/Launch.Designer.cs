@@ -28,14 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.lifetimeExam = new System.Windows.Forms.Timer(this.components);
             this.job = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
-            // lifetimeExam
+            // job
             // 
-            this.lifetimeExam.Tick += new System.EventHandler(this.lifetimeExam_Tick);
+            this.job.DoWork += new System.ComponentModel.DoWorkEventHandler(this.job_DoWork);
             // 
             // Launch
             // 
@@ -43,6 +41,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(120, 0);
             this.Name = "Launch";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Launch";
             this.Load += new System.EventHandler(this.Launch_Load);
             this.ResumeLayout(false);
@@ -50,8 +50,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer lifetimeExam;
         private System.ComponentModel.BackgroundWorker job;
     }
 }

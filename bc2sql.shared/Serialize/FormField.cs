@@ -17,5 +17,9 @@ namespace bc2sql.shared.Serialize
             ff.Value = Value;
             return ff;
         }
+        public override string ToString()
+        {
+            return string.Format("{0}={1}", Key, Value);
+        }
     }
 }

@@ -12,10 +12,10 @@ namespace bc2sql.explore
 {
     internal partial class SetupScraperSettingsPage : UserControl, ISetupPage
     {
-        SetupView _view;
-        SetupController _controller;
+        SetupScraperView _view;
+        SetupScraperController _controller;
 
-        public SetupScraperSettingsPage(SetupView view, SetupController controller)
+        public SetupScraperSettingsPage(SetupScraperView view, SetupScraperController controller)
         {
             InitializeComponent();
             _view = view;
@@ -28,7 +28,7 @@ namespace bc2sql.explore
 
         private void SetupScraperSettingsPage_Load(object sender, EventArgs e)
         {
-
+            settings.SelectedObject = _view.Settings;
         }
 
         public SetupButton[] GetButtons()

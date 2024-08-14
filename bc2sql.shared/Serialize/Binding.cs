@@ -9,7 +9,7 @@ namespace bc2sql.shared.Serialize
     public class Binding
     {
         public string Key;
-        public string Value;
+        public Guid Value;
 
     }
 }

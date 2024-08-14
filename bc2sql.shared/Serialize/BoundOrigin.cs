@@ -11,7 +11,7 @@ namespace bc2sql.shared.Serialize
         public Binding[] Bindings;
         public string Filename;
 
-        public string GetBinding(string key)
+        public Guid GetBinding(string key)
         {
             foreach(Binding binding in Bindings)
             {

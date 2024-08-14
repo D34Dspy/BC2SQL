@@ -9,7 +9,7 @@ namespace bc2sql.shared.Serialize
     [Serializable]
     public class DBConfig
     {
-        public static XmlSerializer gSerializer = new XmlSerializer(typeof(DSConfig));
+        public static XmlSerializer gSerializer = new XmlSerializer(typeof(DBConfig));
         public Guid Identifier { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

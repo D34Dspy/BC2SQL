@@ -9,7 +9,7 @@ namespace bc2sql.explore.Views
 {
     internal class InspectDataSource
     {
-        private Model _model;
+        private ExploreModel _model;
 
         public string Name
         {
@@ -51,7 +51,7 @@ namespace bc2sql.explore.Views
             }
         }
 
-        public InspectDataSource(Model model)
+        public InspectDataSource(ExploreModel model)
         {
             _model = model;
         }

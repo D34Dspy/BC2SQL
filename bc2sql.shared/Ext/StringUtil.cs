@@ -26,6 +26,9 @@ namespace bc2sql
                 return val.Length;
                 });
 
+            if (count == 0)
+                return "-";
+
             num += (count - 1) * separator.Length;
             if (num < 0 || num + 1 < 0)
                 throw new OutOfMemoryException();

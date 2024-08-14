@@ -20,6 +20,16 @@ namespace bc2sql.shared
         public string Endpoint { get; set; }
         public Schema Metadata { get; set; }
         public List<FormField> Fields { get; set; }
+        public Auth.Types AuthType { get; set; }
+        public string OAuth2AccessTokenUrl { get; set; }
+        public string OAuth2ClientID { get; set; }
+        public string OAuth2ClientSecret { get; set; }
+        public string OAuth2AccessToken { get; set; }
+        public string OAuth2RefreshToken { get; set; }
+        public string OAuth2IdentityToken { get; set; }
+        public DateTime OAuth2ExpiresIn { get; set; }
+        public string OAuth2Username { get; set; }
+        public string OAuth2Password { get; set; }
 
         public string MetadataUrl {  
             get
@@ -51,6 +61,26 @@ namespace bc2sql.shared
             Metadata = ODataForge.GetSchema(s.ReadToEnd()).Services.Schemas[0];
         }
 
+        public bool FetchOAuth2()
+        {
+            if (AuthType != Auth.Types.OAuth2)
+                return false;
+            try
+            {
+                var tkn = Auth.OAuth2.GetToken(OAuth2AccessTokenUrl, OAuth2ClientID, OAuth2ClientSecret);
+
+                OAuth2AccessToken = tkn.AccessToken;
+                OAuth2RefreshToken = tkn.RefreshToken;
+                OAuth2ExpiresIn = DateTime.Now.AddSeconds(tkn.ExpiresIn);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public DSConfig Io(DSConfig config = null)
         {
             if (config == null)
@@ -59,9 +89,19 @@ namespace bc2sql.shared
                 {
                     Identifier = Identifier,
                     Name = Name,
-                    Description= Description,
+                    Description = Description,
                     Endpoint = Endpoint,
-                    Metadata = Metadata
+                    Metadata = Metadata,
+                    AuthType = AuthType,
+                    OAuth2AccessTokenUrl = OAuth2AccessTokenUrl,
+                    OAuth2ClientID = OAuth2ClientID,
+                    OAuth2ClientSecret = OAuth2ClientSecret,
+                    OAuth2AccessToken= OAuth2AccessToken,
+                    OAuth2RefreshToken = OAuth2RefreshToken,
+                    OAuth2ExpiresIn = OAuth2ExpiresIn,
+                    OAuth2Username = OAuth2Username,
+                    OAuth2Password = OAuth2Password,
+                    OAuth2IdentityToken = OAuth2IdentityToken,
                 };
             }
             else
@@ -71,6 +111,16 @@ namespace bc2sql.shared
                 Description = config.Description;
                 Endpoint = config.Endpoint;
                 Metadata = config.Metadata;
+                AuthType = config.AuthType;
+                OAuth2AccessTokenUrl = config.OAuth2AccessTokenUrl;
+                OAuth2ClientID = config.OAuth2ClientID;
+                OAuth2ClientSecret = config.OAuth2ClientSecret;
+                OAuth2AccessToken = config.OAuth2AccessToken;
+                OAuth2RefreshToken = config.OAuth2RefreshToken;
+                OAuth2ExpiresIn = config.OAuth2ExpiresIn;
+                OAuth2Username = config.OAuth2Username;
+                OAuth2Password = config.OAuth2Password;
+                OAuth2IdentityToken = config.OAuth2IdentityToken;
             }
 
             return config;

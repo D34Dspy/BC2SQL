@@ -12,7 +12,8 @@ namespace bc2sql.explore
         public static void Bind(DataGridView dgv, string sourceField, string caption, string description)
         {
             var col = new DataGridViewColumn();
-            col.DataPropertyName = sourceField;
+            if(sourceField != null && sourceField != string.Empty)
+                col.DataPropertyName = sourceField;
             col.HeaderText = caption;
             col.ToolTipText = description;
             if (dgv.AutoGenerateColumns)
@@ -34,15 +35,15 @@ namespace bc2sql.explore
         {
             help.ToolTipIcon = ToolTipIcon.Info;
             help.ToolTipTitle = "Reference";
-            help.IsBalloon = true;
             help.SetToolTip(ctrl, caption);
         }
         static SetupButton[] _firstButtons, _defaultButtons, _lastButtons, _extendedButtons;
 
         public static void EnsureButtonsInitialized()
         {
-            _firstButtons = new SetupButton[1]
+            _firstButtons = new SetupButton[2]
             {
+                SetupButton.Cancel,
                 SetupButton.Next
             };
             _defaultButtons = new SetupButton[2]

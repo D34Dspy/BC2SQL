@@ -9,7 +9,7 @@ namespace bc2sql.explore.Views
 {
     internal class InspectProperty
     {
-        private Model _model;
+        private ExploreModel _model;
 
         [DescriptionAttribute("Name of current property / field / column..."),
             CategoryAttribute("Property")]
@@ -51,7 +51,7 @@ namespace bc2sql.explore.Views
             }
         }
 
-        public InspectProperty(Model model)
+        public InspectProperty(ExploreModel model)
         {
             _model = model;
         }

@@ -46,12 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ask.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Ask.Designer.cs">
-      <DependentUpon>Ask.cs</DependentUpon>
-    </Compile>
     <Compile Include="ExploreController.cs" />
     <Compile Include="Controllers\Databases.cs" />
     <Compile Include="Controllers\DataSources.cs" />
@@ -78,24 +72,37 @@
     <Compile Include="Launch.Designer.cs">
       <DependentUpon>Launch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model.cs" />
+    <Compile Include="ExploreModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExploreView.cs" />
     <Compile Include="SetupButton.cs" />
-    <Compile Include="SetupController.cs" />
-    <Compile Include="SetupModel.cs" />
+    <Compile Include="SetupExplorerModel.cs" />
+    <Compile Include="SetupExplorerNew.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SetupExplorerNew.Designer.cs">
+      <DependentUpon>SetupExplorerNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SetupExplorerOpen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SetupExplorerOpen.Designer.cs">
+      <DependentUpon>SetupExplorerOpen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SetupScraperController.cs" />
+    <Compile Include="SetupScraperModel.cs" />
     <Compile Include="SetupScraperConfigureStrategy.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SetupScraperConfigureStrategy.Designer.cs">
       <DependentUpon>SetupScraperConfigureStrategy.cs</DependentUpon>
     </Compile>
-    <Compile Include="SetupScraperConfigureFields.cs">
+    <Compile Include="SetupScraperConfigureFilter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SetupScraperConfigureFields.Designer.cs">
-      <DependentUpon>SetupScraperConfigureFields.cs</DependentUpon>
+    <Compile Include="SetupScraperConfigureFilter.Designer.cs">
+      <DependentUpon>SetupScraperConfigureFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="SetupScraperSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -121,7 +128,7 @@
     <Compile Include="SetupScraperBindDataSourcePage.Designer.cs">
       <DependentUpon>SetupScraperBindDataSourcePage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SetupView.cs" />
+    <Compile Include="SetupScraperView.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Views\CurrentDataBase.cs" />
     <Compile Include="Views\CurrentDataSource.cs" />
@@ -132,6 +139,7 @@
     <Compile Include="Views\CurrentLibraryChangeEventArgs.cs" />
     <Compile Include="Views\CurrentScheduler.cs" />
     <Compile Include="Views\CurrentScraper.cs" />
+    <Compile Include="Views\EntityTypeSetPair.cs" />
     <Compile Include="Views\InspectDataSource.cs" />
     <Compile Include="Views\InspectEntity.cs" />
     <Compile Include="Views\InspectProperty.cs" />
@@ -141,10 +149,9 @@
     <Compile Include="Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ScraperSettings.cs" />
+    <Compile Include="Views\ScraperSettingsChangeEventArgs.cs" />
     <Compile Include="Views\SetupAction.cs" />
-    <EmbeddedResource Include="Ask.resx">
-      <DependentUpon>Ask.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Explore.resx">
       <DependentUpon>Explore.cs</DependentUpon>
     </EmbeddedResource>
@@ -167,6 +174,12 @@
     <EmbeddedResource Include="Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SetupExplorerNew.resx">
+      <DependentUpon>SetupExplorerNew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetupExplorerOpen.resx">
+      <DependentUpon>SetupExplorerOpen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SetupScraperBindDatabasePage.resx">
       <DependentUpon>SetupScraperBindDatabasePage.cs</DependentUpon>
     </EmbeddedResource>
@@ -179,8 +192,8 @@
     <EmbeddedResource Include="SetupScraperConfigureStrategy.resx">
       <DependentUpon>SetupScraperConfigureStrategy.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SetupScraperConfigureFields.resx">
-      <DependentUpon>SetupScraperConfigureFields.cs</DependentUpon>
+    <EmbeddedResource Include="SetupScraperConfigureFilter.resx">
+      <DependentUpon>SetupScraperConfigureFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SetupScraperSettingsPage.resx">
       <DependentUpon>SetupScraperSettingsPage.cs</DependentUpon>

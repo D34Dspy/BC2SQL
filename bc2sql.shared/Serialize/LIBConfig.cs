@@ -11,11 +11,11 @@ namespace bc2sql.shared.Serialize
     {
         public static XmlSerializer gSerializer = new XmlSerializer(typeof(LIBConfig));
         public Guid Identifier;
+        public string Name;
         public BoundOrigin[] Scrapers;
         public Origin[] DataSources;
         public Origin[] Databases;
         public Origin[] Schedulers;
-        public string ConfigureExe;
         public string ScrapeExe;
     }
 }

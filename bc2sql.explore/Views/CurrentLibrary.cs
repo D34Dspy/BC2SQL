@@ -8,10 +8,10 @@ namespace bc2sql.explore.Views
 {
     internal class CurrentLibrary
     {
-        public delegate void LibraryChangeHandler(object sender, string Filename, string ConfigExe, string ScrapeExe);
+        public delegate void LibraryChangeHandler(object sender, string Filename, string ScrapeExe);
         public event LibraryChangeHandler OnChangeLibrary;
 
-        Model _model;
+        ExploreModel _model;
 
         [DescriptionAttribute("Filename of current library"),
             CategoryAttribute("Workspace")]
@@ -23,7 +23,7 @@ namespace bc2sql.explore.Views
             }
             set
             {
-                OnChangeLibrary(this, value, ConfiguratorExe, ScraperExe);
+                OnChangeLibrary(this, value, ScraperExe);
             }
         }
 
@@ -36,22 +36,8 @@ namespace bc2sql.explore.Views
             }
         }
 
-        [DescriptionAttribute("Filename of configurator executable"),
-            CategoryAttribute("Executables")]
-        public string ConfiguratorExe
-        {
-            get
-            {
-                return _model.LibraryConfig.ConfigureExe;
-            }
-            set
-            {
-                OnChangeLibrary(this, Filename, value, ScraperExe);
-            }
-        }
-
         [DescriptionAttribute("Filename of scraper executable"),
-            CategoryAttribute("Executables")]
+            CategoryAttribute("Executable(s)")]
         public string ScraperExe
         {
             get
@@ -60,11 +46,11 @@ namespace bc2sql.explore.Views
             }
             set
             {
-                OnChangeLibrary(this, Filename, ConfiguratorExe, value);
+                OnChangeLibrary(this, Filename, value);
             }
         }
 
-        public CurrentLibrary(Model model)
+        public CurrentLibrary(ExploreModel model)
         {
             _model = model;
         }

@@ -46,16 +46,32 @@ namespace bc2sql.shared.SQL
                 default:
                     throw new NotImplementedException();
             }
-        } 
+        }
 
-        public override string ToString()
+        public string DTypeToString()
         {
             return string.Format(
-                "\"{0}\" {1}{2}",
+                "{1}{2}",
                 Identifier,
                 FormatDType(),
                 FormatLen()
             );
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "\"{0}\" {1}",
+                Identifier,
+                FormatDType()
+            );
+        }
+
+        public string Collation()
+        {
+            if(DataType == DataTypes.VarChar)
+                return "Latin1_General_100_CS_AS";
+            return string.Empty;
         }
 
         public string FormatValue(object value)

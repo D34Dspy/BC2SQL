@@ -25,9 +25,11 @@ namespace bc2sql.explore
 
             SetCurrentPage(startingPage);
             Execute();
+
+            CenterToScreen();
         }
 
-        public static Setup CreateScraper(SetupView view, SetupController controller)
+        public static Setup CreateScraper(SetupScraperView view, SetupScraperController controller)
         {
             return new Setup((view.IsEditing ? "Edit" : "New") + " Scraper", new ISetupPage[]
             {
@@ -110,8 +112,14 @@ namespace bc2sql.explore
             ISetupPage page = _pages[_newPage];
             if (page == null)
                 throw new Exception("invalid page");
-            if(_hasOrigin)
-                page.OnButtonClicked(_origin);
+            ISetupPage prevPage = _pages[_currentPage];
+            if (prevPage == null || page == null)
+                throw new Exception("invalid page");
+            if (_hasOrigin)
+            {
+                prevPage.OnButtonClicked(_origin);
+                _hasOrigin = false;
+            }
             var window = page.GetWindow();
             if (window == null)
                 throw new Exception("invalid window");
@@ -144,12 +152,11 @@ namespace bc2sql.explore
 
         private void SetupButtonWindow_Click(object sender, EventArgs e)
         {
-            var page = _pages[_currentPage];
-            var button = (Button)sender;
-            var setupButton = (SetupButton)button.Tag;
-
             try
             {
+                var page = _pages[_currentPage];
+                var button = (Button)sender;
+                var setupButton = (SetupButton)button.Tag;
                 page.OnButtonClicked(setupButton);
 
                 var newPageNo = _currentPage + 
@@ -174,7 +181,7 @@ namespace bc2sql.explore
 
         private void Setup_Load(object sender, EventArgs e)
         {
-             
+            Activate();
         }
     }
 }

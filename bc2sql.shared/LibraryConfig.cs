@@ -14,6 +14,7 @@ namespace bc2sql.shared
     public class LibraryConfig : IWorkspace
     {
         public Guid Identifier { get; set; }
+        public string Name { get; set; }
 
         public List<SchedulerConfig> Schedulers { get { return _schedulers; } }
         private List<SchedulerConfig> _schedulers;
@@ -27,7 +28,6 @@ namespace bc2sql.shared
         public List<DatabaseConfig> Databases { get { return _databases; } }
         private List<DatabaseConfig> _databases;
 
-        public string ConfigureExe { get; set; }
         public string ScrapeExe { get; set; }
 
         public LibraryConfig()
@@ -70,8 +70,8 @@ namespace bc2sql.shared
 
                 // Properties
                 config.Identifier = Identifier;
-                config.ConfigureExe = ConfigureExe;
                 config.ScrapeExe = ScrapeExe;
+                config.Name = Name;
 
                 // Collections
                 config.DataSources = DataSources.Select(dataSource =>
@@ -84,10 +84,10 @@ namespace bc2sql.shared
                 {
                     return new BoundOrigin()
                     {
-                        Filename = scraper.GetSource(),
+                        Filename = scraper.GetOrigin(),
                         Bindings = new Binding[] {
-                            new Binding { Key = "DataSource", Value = scraper.DataSourceIdentifier.ToString() },
-                            new Binding { Key = "Database", Value = scraper.DataBaseIdentifier.ToString() }
+                            new Binding { Key = "DataSource", Value = scraper.DataSourceIdentifier },
+                            new Binding { Key = "Database", Value = scraper.DataBaseIdentifier }
                         }
                     };
                 }).ToArray();
@@ -96,8 +96,8 @@ namespace bc2sql.shared
             {
                 // Properties
                 Identifier = config.Identifier;
-                ConfigureExe = config.ConfigureExe;
                 ScrapeExe = config.ScrapeExe;
+                Name = config.Name;
 
                 // Collections
                 _schedulers = new List<SchedulerConfig>();
@@ -134,8 +134,8 @@ namespace bc2sql.shared
                     deserialized.SetOrigin(scraper.Filename);
                     deserialized.SetSource(File.ReadAllText(scraper.Filename));
                     deserialized.Bind(
-                        GetDataSourceById(new Guid(scraper.GetBinding("DataSource"))),
-                        GetDatabaseById(new Guid(scraper.GetBinding("Database")))
+                        GetDataSourceById(scraper.GetBinding("DataSource")),
+                        GetDatabaseById(scraper.GetBinding("Database"))
                         );
                     return deserialized;
                 }));
@@ -173,54 +173,42 @@ namespace bc2sql.shared
             return Path.Combine(GetWorkspace(), "Scrapers");
         }
     
-        public bool Join(string filename, string[] args)
+        public Process Join(string filename, string[] args, bool dry = false)
         {
             Process proc = new Process();
             proc.StartInfo = new ProcessStartInfo(filename, string.Join(" ", args));
-            proc.Start();
-            proc.WaitForExit();
-            return proc.ExitCode == 0;
+            return dry || proc.Start() ? proc : throw new Exception("Unable to start process");
         }
-        public bool RunScraper(ScraperConfig config)
+        public Process RunScraper(ScraperConfig config, bool keepOpen = false, bool dry = false)
+        {
+            return keepOpen 
+                ? Join(
+                    ScrapeExe,
+                    new string[]
+                    {
+                        ScrapeExe,
+                        "scrape",
+                        "--keep-open",
+                        "--filename",
+                        string.Format("\"{0}\"", config.GetOrigin())
+                    },
+                    dry) 
+                : Join(
+                    ScrapeExe,
+                    new string[]
+                    {
+                        ScrapeExe,
+                        "scrape",
+                        "--filename",
+                        string.Format("\"{0}\"", config.GetOrigin())
+                    },
+                    dry
+            );
+        }
+        public Process RunScheduler(SchedulerConfig config)
         {
             return Join(
                 ScrapeExe,
-                new string[]
-                {
-                    "scrape",
-                    "--filename",
-                    string.Format("\"{0}\"", config.GetSource())
-                }
-            );
-        }
-        public bool RunScheduler(SchedulerConfig config)
-        {
-            return Join(
-                ScrapeExe,
-                new string[]
-                {
-                    "schedule",
-                    "--filename",
-                    string.Format("\"{0}\"", config.GetSource())
-                }
-            );
-        }
-        public bool ConfigureScraper(ScraperConfig config)
-        {
-            return Join(
-                ConfigureExe,
-                new string[]
-                {
-                    "scrape",
-                    "--filename",
-                    string.Format("\"{0}\"", config.GetSource())
-                }
-            );
-        }
-        public bool ConfigureScheduler(SchedulerConfig config)
-        {
-            return Join(
-                ConfigureExe,
                 new string[]
                 {
                     "schedule",

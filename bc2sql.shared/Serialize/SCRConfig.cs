@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bc2sql.shared.OData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
@@ -10,12 +11,14 @@ namespace bc2sql.shared.Serialize
     [Serializable]
     public class SCRConfig
     {
-        public static XmlSerializer gSerializer = new XmlSerializer(typeof(SCHConfig));
-        public string Identifier { get; set; }
-        public string DataSourceIdentifier { get; set; }
-        public string DataBaseIdentifier { get; set; }
-        public string Endpoint { get; set; }
-        public string ConnectString { get; set; }
+        public static XmlSerializer gSerializer = new XmlSerializer(typeof(SCRConfig));
+        public Guid Identifier { get; set; }
+        public Guid DataSourceIdentifier { get; set; }
+        public Guid DataBaseIdentifier { get; set; }
+        public string DataSourceOrigin { get; set; }
+        public string DatabaseOrigin { get; set; }
+        public EntityType Type { get; set; }
+        public EntitySet Set { get; set; }
         public ScraperStrategy Strategy { get; set; }
         public string TableName { get; set; }
         public string MergeSourceAlias { get; set; }

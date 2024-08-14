@@ -8,13 +8,13 @@ namespace bc2sql.explore
 {
     internal static class Program
     {
-        static Model mdl;
+        static ExploreModel mdl;
         static ExploreController ctrl;
         static ExploreView view;
 
         static Explore CreateExplorer(string[] args)
         {
-            mdl = new Model();
+            mdl = new ExploreModel();
             ctrl = new ExploreController(mdl, args);
             view = new ExploreView(mdl);
 
@@ -41,6 +41,11 @@ namespace bc2sql.explore
             mdl.SelectedDataSource.Description = args.Description;
             mdl.SelectedDataSource.Endpoint = args.Endpoint;
             WorkspaceUtil.Save(mdl.SelectedDataSource);
+        }
+
+        static Setup CreateExplorerFactory()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

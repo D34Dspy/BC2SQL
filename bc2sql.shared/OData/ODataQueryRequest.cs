@@ -16,12 +16,14 @@ namespace bc2sql.shared.OData
         public string TargetUrl;
         public bool IgnoreOdataFields;
 
-        public static ODataQueryRequest Create(string url, string entity, FormField[] fields, bool ignoreOdataFields = false, int timeout = 10000)
+        public delegate void CreateHook(WebRequest req);
+        public static ODataQueryRequest Create(string url, string entity, FormField[] fields, bool ignoreOdataFields = false, int timeout = 10000, CreateHook hk = null)
         {
             var target = url;
             if(!target.EndsWith("/"))
                 target += "/";
             target += entity;
+
             if(fields != null)
             {
                 bool first = true;
@@ -42,6 +44,9 @@ namespace bc2sql.shared.OData
             req.Timeout = timeout;
             req.Method = "GET";
 
+            if (hk != null)
+                hk(req);
+
             return new ODataQueryRequest
             {
                 _webRequest = req,
@@ -55,7 +60,6 @@ namespace bc2sql.shared.OData
         public ODataQuery GetResponse()
         {
             var response = _webRequest.GetResponse();
-
             return new ODataQuery(new StreamReader(response.GetResponseStream()), Entity, true, IgnoreOdataFields);
         }
     }

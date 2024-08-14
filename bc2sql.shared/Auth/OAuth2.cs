@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace bc2sql.shared.Auth
 {
-    internal class OAuth2
+    public class OAuth2
     {
         public static OAuth2Token GetToken(string tokenAddr, string clientId, string clientSecret, string grantType = "client_credentials", int timeout = 5000)
         {

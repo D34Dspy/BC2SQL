@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,12 +13,14 @@ using System.Net;
 using System.Xml;
 using System.Diagnostics.Eventing.Reader;
 using System.Threading;
+using bc2sql.shared.OData;
+using System.Diagnostics;
 
 namespace bc2sql.explore
 {
     internal class ExploreController
     {
-        private Model _model;
+        private ExploreModel _model;
 
         public LibraryConfiguration LibraryConfiguration;
         public Scrapers Scrapers;
@@ -121,16 +124,6 @@ namespace bc2sql.explore
                 write = true;
             }
 
-            if (!File.Exists(_model.LibraryConfig.ConfigureExe))
-            {
-                var ofd = new OpenFileDialog();
-                ofd.Title = "Specify configuration executable...";
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    _model.LibraryConfig.ConfigureExe = ofd.FileName;
-                }
-            }
-
             if (!File.Exists(_model.LibraryConfig.ScrapeExe))
             {
                 var ofd = new OpenFileDialog();
@@ -175,7 +168,7 @@ namespace bc2sql.explore
             }
         }
 
-        public ExploreController(Model model, string[] args)
+        public ExploreController(ExploreModel model, string[] args)
         {
             _model = model;
 
@@ -190,7 +183,7 @@ namespace bc2sql.explore
             LibraryConfiguration.Filename = LibraryConfiguration.Filename;
         }
 
-        private void Create<T>(string home_subdir, T cfg, IList<T> collection, out T storage) where T: IWorkspace
+        public void Create<T>(string home_subdir, T cfg, IList<T> collection, out T storage) where T: IWorkspace
         {
             // Guid guid = Guid.NewGuid();
             // var dataSource = new DataSourceConfig();
@@ -220,11 +213,10 @@ namespace bc2sql.explore
             collection.Add(cfg);
             storage = cfg;
 
-            SaveDataSource();
             SaveLibrary();
         }
 
-        private void Clone<T>(string home_subdir, T data, IList<T> collection, out T storage) where T : IWorkspace
+        public void Clone<T>(string home_subdir, T data, IList<T> collection, out T storage) where T : IWorkspace
         {
             Create(
                 home_subdir,
@@ -233,45 +225,84 @@ namespace bc2sql.explore
                 out storage);
         }
 
-        public void CreateDataSource()
+        public DataSourceConfig CreateDataSource()
         {
             Create(
                 _model.LibraryConfig.GetDataSources(),
                 new DataSourceConfig(),
                 _model.LibraryConfig.DataSources,
                 out _model.SelectedDataSource);
+            SaveDataSource();
+            return _model.SelectedDataSource;
         }
 
-        public void CreateDatabase()
+        public DatabaseConfig CreateDatabase()
         {
             Create(
                 _model.LibraryConfig.GetDatabases(),
                 new DatabaseConfig(),
                 _model.LibraryConfig.Databases,
                 out _model.SelectedDatabase);
+            SaveDatabase();
+            return _model.SelectedDatabase;
         }
 
-        public void CloneDataSource()
+        public ScraperConfig CreateScraper()
+        {
+            Create(
+                _model.LibraryConfig.GetScrapers(),
+                new ScraperConfig(),
+                _model.LibraryConfig.Scrapers,
+                out _model.SelectedScraper);
+            SaveScraper();
+            return _model.SelectedScraper;
+        }
+
+        public SchedulerConfig CreateScheduler()
+        {
+            Create(
+                _model.LibraryConfig.GetScrapers(),
+                new SchedulerConfig(),
+                _model.LibraryConfig.Schedulers,
+                out _model.SelectedScheduler);
+            SaveScheduler();
+            return _model.SelectedScheduler;
+        }
+
+        public DataSourceConfig CloneDataSource()
         {
             Clone(
                 _model.LibraryConfig.GetDataSources(),
                 _model.SelectedDataSource,
                 _model.LibraryConfig.DataSources,
                 out _model.SelectedDataSource);
+            SaveDataSource();
+            return _model.SelectedDataSource;
         }
 
-        public void CloneDatabase()
+        public DatabaseConfig CloneDatabase()
         {
             Clone(
                 _model.LibraryConfig.GetDatabases(),
                 _model.SelectedDatabase,
                 _model.LibraryConfig.Databases,
                 out _model.SelectedDatabase);
+            SaveDatabase();
+            return _model.SelectedDatabase;
         }
 
         public void DeleteDataSource()
         {
             WorkspaceUtil.Delete(_model.SelectedDataSource, _model.LibraryConfig.DataSources);
+        }
+
+        public void DeleteScraper()
+        {
+            WorkspaceUtil.Delete(_model.SelectedScraper, _model.LibraryConfig.Scrapers);
+        }
+        public void DeleteScheduler()
+        {
+            WorkspaceUtil.Delete(_model.SelectedScheduler, _model.LibraryConfig.Schedulers);
         }
         public void DeleteDatabase()
         {
@@ -285,6 +316,14 @@ namespace bc2sql.explore
         public void SaveDatabase()
         {
             WorkspaceUtil.Save(_model.SelectedDatabase);
+        }
+        public void SaveScraper()
+        {
+            WorkspaceUtil.Save(_model.SelectedScraper);
+        }
+        public void SaveScheduler()
+        {
+            WorkspaceUtil.Save(_model.SelectedScheduler);
         }
 
         public void SaveLibrary()
@@ -316,7 +355,11 @@ namespace bc2sql.explore
         {
             _model.SelectedDatabase = _model.LibraryConfig.Databases[index];
         }
-
+        public void MakeScraperCurrent(int index)
+        {
+            _model.SelectedScraper = _model.LibraryConfig.Scrapers[index];
+        }
+        
         public delegate void OnMetadataFetched(bool succeeded);
         class MetadataPayload
         {
@@ -360,7 +403,18 @@ namespace bc2sql.explore
 
         }
 
-        internal void CreateInspection(int index)
+        internal void CreateInspectionBySet(int index)
+        {
+            _model.InspectIndex = index;
+            _model.InspectDataSource = _model.SelectedDataSource;
+            _model.InspectDataSet = _model.SelectedDataSource.Metadata.SelectSets(set => set).Skip(index).Take(1).Single();
+            _model.InspectDataType = _model.SelectedDataSource.Metadata.Find(_model.InspectDataSet);
+            _model.InspectEntityName = _model.InspectDataType.Name;
+            _model.InspectPropertyIndex = 0;
+            _model.InspectProperty = _model.InspectDataType.Properties[0];
+        }
+
+        internal void CreateInspectionByType(int index)
         {
             _model.InspectIndex = index;
             _model.InspectDataSource = _model.SelectedDataSource;
@@ -368,6 +422,21 @@ namespace bc2sql.explore
             _model.InspectEntityName = _model.InspectDataType.Name;
             _model.InspectPropertyIndex = 0;
             _model.InspectProperty = _model.InspectDataType.Properties[0];
+
+            try
+            {
+                _model.InspectDataSet = _model.SelectedDataSource.Metadata.Find(_model.InspectDataType);
+            } catch (KeyNotFoundException ex)
+            {
+                MessageBox.Show(
+                    string.Format(
+                        "OData entity type \"{0}\" does not have an Odata entity set linked to it.\nThere can be potentially no datasets be retrieved.\n{1}",
+                        _model.InspectDataType.Name,
+                        ex.ToString()
+                    ),
+                    "OData Type Error"
+                );
+            }
         }
 
         internal InspectController CreateInspectController()
@@ -375,9 +444,14 @@ namespace bc2sql.explore
             return new InspectController(_model);
         }
 
-        internal SetupModel CreateSetupModel()
+        internal SetupScraperModel CreateSetupModel()
         {
-            return new SetupModel(_model);
+            return new SetupScraperModel(_model);
+        }
+
+        public Process RunScraper(bool keepOpen = false, bool dry = false)
+        {
+            return _model.LibraryConfig.RunScraper(_model.SelectedScraper, keepOpen, dry);
         }
     }
 }

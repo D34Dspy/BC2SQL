@@ -143,13 +143,39 @@ namespace bc2sql.shared.SQL
     
         public string Finalize()
         {
-            // Create or alter source table
+            // Create source table if not exist
             _builder.AppendLine(
-                SqlForge.CreateOrAlterTable(
+                SqlForge.CreateTableIfNotExist(
                     _sourceScheme.Identifier,
-                    _sourceScheme.FieldDefinitions
+                    _sourceScheme.FieldDefinitions,
+                    SourceTemporary
                     )
                 );
+
+            // // Ensure source table collations
+            // _builder.AppendLine(
+            //     SqlForge.EnsureCollations(
+            //         _sourceScheme.Identifier,
+            //         _sourceScheme.FieldDefinitions
+            //         )
+            //     );
+
+            // Create destination table if not exist
+            _builder.AppendLine(
+                SqlForge.CreateTableIfNotExist(
+                    _destinationScheme.Identifier,
+                    _destinationScheme.FieldDefinitions
+                    )
+                );
+
+
+            // // Ensure destination table collations
+            // _builder.AppendLine(
+            //     SqlForge.EnsureCollations(
+            //         _destinationScheme.Identifier,
+            //         _destinationScheme.FieldDefinitions
+            //         )
+            //     );
 
             // Insert datasets into source table
             _builder.AppendLine(
@@ -172,6 +198,8 @@ namespace bc2sql.shared.SQL
                     _destinationAlias
                     )
                 );
+
+            // Delete check?
 
             // Drop source table
             if(SourceTemporary)

@@ -32,7 +32,7 @@ namespace bc2sql.shared.SQL
                 return null;
             if (prefix == null)
                 prefix = string.Empty;
-            if (name == null)
+            if (name == null || name == string.Empty)
                 name = typeDef.Name;
 
             // var dict = new Dictionary<string, Type>();
@@ -84,6 +84,15 @@ namespace bc2sql.shared.SQL
         {
             // TODO
             return CreateTable(tableName, fields);
+        }
+
+        public static string CreateTableIfNotExist(string tableName, IEnumerable<FieldDef> fields, bool tmp = false)
+        {
+            return string.Format("IF OBJECT_ID(N'{2}{0}', N'U') IS NULL BEGIN {1} END",
+                tableName,
+                CreateTable(tableName, fields),
+                tmp ? "tempdb.." : string.Empty
+                );
         }
 
         public delegate string DataSetInjector(object[] dataset, IEnumerable<FieldDef> metadata, out int skipDataset, out int fieldsToSkipDataset);
@@ -160,6 +169,11 @@ namespace bc2sql.shared.SQL
                 string.Join(", ", columns),
                 string.Join(",\n", datasets)
             );
+        }
+
+        public static string EnsureCollations(string tableName, IEnumerable<FieldDef> fieldDefs)
+        {
+            return StringUtil.Join("\n", fieldDefs.Where(fld => !fld.Key && fld.Collation().Length > 1).Select(fld => string.Format("ALTER TABLE [{0}] ALTER COLUMN {1} COLLATE {2};", tableName, fld.ToString(), fld.Collation())));
         }
 
         public static string FormatRow(IEnumerable<FieldDef> fieldDef, IEnumerable<object> dataset)

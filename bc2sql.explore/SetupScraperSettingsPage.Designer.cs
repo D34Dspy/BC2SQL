@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.settings = new System.Windows.Forms.PropertyGrid();
             this.SuspendLayout();
             // 
-            // propertyGrid1
+            // settings
             // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(50, 50);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(500, 300);
-            this.propertyGrid1.TabIndex = 0;
+            this.settings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settings.Location = new System.Drawing.Point(50, 50);
+            this.settings.Name = "settings";
+            this.settings.Size = new System.Drawing.Size(500, 300);
+            this.settings.TabIndex = 0;
             // 
             // SetupScraperSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.propertyGrid1);
+            this.Controls.Add(this.settings);
             this.Name = "SetupScraperSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(50);
             this.Size = new System.Drawing.Size(600, 400);
@@ -54,6 +54,6 @@
 
         #endregion
 
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid settings;
     }
 }

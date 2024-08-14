@@ -8,7 +8,7 @@ namespace bc2sql.shared.Auth
 {
     [Serializable]
     [JsonObject(MemberSerialization = MemberSerialization.OptOut)]
-    internal class OAuth2Token
+    public class OAuth2Token
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

@@ -8,8 +8,8 @@ namespace bc2sql.explore
 {
     internal class InspectController
     {
-        private Model _model;
-        public InspectController(Model model)
+        private ExploreModel _model;
+        public InspectController(ExploreModel model)
         {
             _model = model;
         }

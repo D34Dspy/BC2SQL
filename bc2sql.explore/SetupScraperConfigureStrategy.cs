@@ -12,15 +12,22 @@ namespace bc2sql.explore
 {
     internal partial class SetupScraperConfigureStrategy : UserControl, ISetupPage
     {
-        SetupView _view;
-        SetupController _controller;
+        SetupScraperView _view;
+        SetupScraperController _controller;
 
-        public SetupScraperConfigureStrategy(SetupView view, SetupController controller)
+        public SetupScraperConfigureStrategy(SetupScraperView view, SetupScraperController controller)
         {
             InitializeComponent();
             _view = view;
             _controller = controller;
             useFixed.Checked = true;
+            mergeSrcAlias.Text = _view.MergeSourceAlias;
+            mergeDstAlias.Text = _view.MergeDestinationAlias;
+            destinationTableName.Text = _view.TableName;
+            useWindowing.Checked = _view.UseWindowing;
+            useRelative.Checked = _view.UseWindowingPercentage;
+            numDatasets.Value = _view.WindowingDatasets;
+            numPercentage.Value = (decimal)_view.WindowingPercentage;
         }
 
         public SetupButton[] GetButtons()
@@ -45,7 +52,6 @@ namespace bc2sql.explore
 
         void ISetupPage.OnButtonClicked(SetupButton button)
         {
-            
         }
 
         private void SetupScraperConfigureStrategy_Load(object sender, EventArgs e)
@@ -75,6 +81,37 @@ namespace bc2sql.explore
                 numDatasets.Enabled = false;
                 numPercentage.Enabled = true;
             }
+        }
+
+        private void tableNameOption_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mergeSrcAlias_TextChanged(object sender, EventArgs e)
+        {
+            _controller.SetSourceAlias(mergeSrcAlias.Text);
+        }
+
+        private void mergeDstAlias_TextChanged(object sender, EventArgs e)
+        {
+            _controller.SetDestinationAlias(mergeDstAlias.Text);
+        }
+
+        private void destinationTableName_TextChanged(object sender, EventArgs e)
+        {
+            _controller.SetTableName(destinationTableName.Text);
+        }
+
+        private void numDatasets_ValueChanged(object sender, EventArgs e)
+        {
+            _controller.SetDatasets(numDatasets.Value);
+        }
+
+        private void numPercentage_ValueChanged(object sender, EventArgs e)
+        {
+            _controller.SetPercentage(numPercentage.Value);
+
         }
     }
 }

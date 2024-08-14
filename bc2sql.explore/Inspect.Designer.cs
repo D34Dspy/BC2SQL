@@ -48,6 +48,8 @@
             this.close = new System.Windows.Forms.Button();
             this.closeNewScraper = new System.Windows.Forms.Button();
             this.help = new System.Windows.Forms.ToolTip(this.components);
+            this.entityType = new System.Windows.Forms.Label();
+            this.entitySet = new System.Windows.Forms.Label();
             this.inspectPages.SuspendLayout();
             this.metaDataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -125,6 +127,8 @@
             // 
             // dataSourceInfo
             // 
+            this.dataSourceInfo.Controls.Add(this.entityType);
+            this.dataSourceInfo.Controls.Add(this.entitySet);
             this.dataSourceInfo.Controls.Add(this.dataSourceEntity);
             this.dataSourceInfo.Controls.Add(this.dataSourceDescription);
             this.dataSourceInfo.Controls.Add(this.dataSourceMetadata);
@@ -143,7 +147,7 @@
             // dataSourceEntity
             // 
             this.dataSourceEntity.AutoSize = true;
-            this.dataSourceEntity.Location = new System.Drawing.Point(388, 56);
+            this.dataSourceEntity.Location = new System.Drawing.Point(616, 56);
             this.dataSourceEntity.Name = "dataSourceEntity";
             this.dataSourceEntity.Size = new System.Drawing.Size(67, 13);
             this.dataSourceEntity.TabIndex = 6;
@@ -164,7 +168,7 @@
             // dataSourceMetadata
             // 
             this.dataSourceMetadata.AutoSize = true;
-            this.dataSourceMetadata.Location = new System.Drawing.Point(388, 36);
+            this.dataSourceMetadata.Location = new System.Drawing.Point(616, 36);
             this.dataSourceMetadata.Name = "dataSourceMetadata";
             this.dataSourceMetadata.Size = new System.Drawing.Size(86, 13);
             this.dataSourceMetadata.TabIndex = 4;
@@ -176,7 +180,7 @@
             // dataSourceLink
             // 
             this.dataSourceLink.AutoSize = true;
-            this.dataSourceLink.Location = new System.Drawing.Point(388, 16);
+            this.dataSourceLink.Location = new System.Drawing.Point(616, 16);
             this.dataSourceLink.Name = "dataSourceLink";
             this.dataSourceLink.Size = new System.Drawing.Size(83, 13);
             this.dataSourceLink.TabIndex = 3;
@@ -268,6 +272,24 @@
             this.closeNewScraper.UseVisualStyleBackColor = true;
             this.closeNewScraper.Click += new System.EventHandler(this.closeNewScraper_Click);
             // 
+            // entityType
+            // 
+            this.entityType.AutoSize = true;
+            this.entityType.Location = new System.Drawing.Point(297, 36);
+            this.entityType.Name = "entityType";
+            this.entityType.Size = new System.Drawing.Size(60, 13);
+            this.entityType.TabIndex = 8;
+            this.entityType.Text = "Entity Type";
+            // 
+            // entitySet
+            // 
+            this.entitySet.AutoSize = true;
+            this.entitySet.Location = new System.Drawing.Point(297, 16);
+            this.entitySet.Name = "entitySet";
+            this.entitySet.Size = new System.Drawing.Size(52, 13);
+            this.entitySet.TabIndex = 7;
+            this.entitySet.Text = "Entity Set";
+            // 
             // Inspect
             // 
             this.AcceptButton = this.close;
@@ -318,5 +340,7 @@
         private System.Windows.Forms.Button close;
         private System.Windows.Forms.Button closeNewScraper;
         private System.Windows.Forms.ToolTip help;
+        private System.Windows.Forms.Label entityType;
+        private System.Windows.Forms.Label entitySet;
     }
 }

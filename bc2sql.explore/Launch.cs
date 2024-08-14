@@ -30,11 +30,11 @@ namespace bc2sql.explore
             this.Visible = false;
         }
 
-        static void LauncherThread(object param)
-        {
-            var payload = (Payload)param;
-            payload.Result = payload.Target(payload.Sender);
-        }
+        // static void LauncherThread(object param)
+        // {
+        //     var payload = (Payload)param;
+        //     payload.Result = payload.Target(payload.Sender);
+        // }
 
         public Launch(object sender, OnLaunch launcher)
         {
@@ -44,29 +44,38 @@ namespace bc2sql.explore
             {
                 Sender = sender,
                 Target = launcher,
-                Result = DialogResult.Cancel
+                Result = DialogResult.Abort
             };
-            _launcherThread = new Thread(LauncherThread);
-            _launcherThread.Start(_payload);
+            job.DoWork += job_DoWork;
+            job.RunWorkerCompleted += Job_RunWorkerCompleted;
+            // _launcherThread = new Thread(LauncherThread);
+            // _launcherThread.Start(_payload);
+
+        }
+
+        private void Job_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            DialogResult = _payload.Result;
+            Close();
         }
 
         private void Launch_Load(object sender, EventArgs e)
         {
-            this.Visible = false;
+            job.RunWorkerAsync();
         }
 
-        bool IsAlive()
+        private bool _done = false;
+        private void job_DoWork(object sender, DoWorkEventArgs e)
         {
-            return _launcherThread.ThreadState == ThreadState.Running;
-        }
-
-        private void lifetimeExam_Tick(object sender, EventArgs e)
-        {
-            if (IsAlive())
+            if (_done)
+                return;
+            _payload.Result = _payload.Target(_payload.Sender);
+            if (_payload.Result != DialogResult.Retry)
             {
-                DialogResult = _payload.Result;
-                Close();
+                e.Result = _payload.Result;
+                _done = true;
             }
+            
         }
     }
 }

@@ -8,7 +8,7 @@ namespace bc2sql.explore.Views
 {
     internal class InspectEntity
     {
-        private Model _model;
+        private ExploreModel _model;
 
         public string ODataUrl
         {
@@ -18,7 +18,7 @@ namespace bc2sql.explore.Views
             }
         }
 
-        public InspectEntity(Model model)
+        public InspectEntity(ExploreModel model)
         {
             _model = model;
         }

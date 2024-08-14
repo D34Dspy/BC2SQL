@@ -1,4 +1,5 @@
-﻿using bc2sql.shared.Serialize;
+﻿using bc2sql.shared.OData;
+using bc2sql.shared.Serialize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,26 @@ namespace bc2sql.shared
         // Connection
         public Guid DataSourceIdentifier { get; set; }
         public Guid DataBaseIdentifier { get; set; }
+        public string DataSourceOrigin { get; set; }
+        public string DatabaseOrigin { get; set; }
 
         // Data Source
-        public Url Endpoint { get; set; }
-
-        // Database
-        public string ConnectString { get; set; }
+        public EntityType Type { get; set; }
+        public EntitySet Set { get; set; }
 
         // Scraper
         public Guid Identifier { get; set; }
         public ScraperStrategy Strategy { get; set; }
+        public bool UseWindowing { get; set; }
+        public int WindowSize { get; set; }
+        public int DataSourceCount { get; set; } // To Assign WindowSize via a percentage
+        public string SourceAlias { get; set; }
+        public string DestinationAlias { get; set; }
+        public Property[] Keys { get; set; }
+        public bool UseSystemGuidInsertModifyDate { get; set; }
         public string TableName { get; set; }
+        public string[] MergeConditions { get; set; }
+        public FormField[] FormFields { get; set; }
 
         // Bindings
         private DataSourceConfig _dataSource;
@@ -32,7 +42,11 @@ namespace bc2sql.shared
         public void Bind(DataSourceConfig ds, DatabaseConfig db)
         {
             _dataSource = ds;
+            DataSourceIdentifier = ds.Identifier;
+            DataSourceOrigin = ds.GetOrigin();
             _database = db;
+            DataBaseIdentifier = db.Identifier;
+            DatabaseOrigin = db.GetOrigin();
         }
 
         public DataSourceConfig GetDataSource()
@@ -50,24 +64,32 @@ namespace bc2sql.shared
             {
                 config = new SCRConfig()
                 {
-                    DataSourceIdentifier = DataBaseIdentifier.ToString(),
-                    DataBaseIdentifier = DataBaseIdentifier.ToString(),
-                    Endpoint = Endpoint.ToString(),
-                    ConnectString = ConnectString,
-                    Identifier = Identifier.ToString(),
+                    DataSourceIdentifier = DataSourceIdentifier,
+                    DataBaseIdentifier = DataBaseIdentifier,
+                    DataSourceOrigin = DataSourceOrigin,
+                    DatabaseOrigin = DatabaseOrigin,
+                    Identifier = Identifier,
                     Strategy = Strategy,
-                    TableName = TableName
+                    TableName = TableName,
+                    Set = Set,
+                    Type = Type,
+                    MergeSourceAlias = SourceAlias,
+                    MergeDestinationAlias = DestinationAlias,
                 };
             }
             else
             {
-                DataSourceIdentifier = new Guid(config.DataSourceIdentifier);
-                DataBaseIdentifier = new Guid(config.DataBaseIdentifier);
-                Endpoint = new Url(config.Endpoint);
-                ConnectString = config.ConnectString;  
-                Identifier = new Guid(config.Identifier);
+                DataSourceIdentifier = config.DataSourceIdentifier;
+                DataBaseIdentifier = config.DataBaseIdentifier;
+                DataSourceOrigin = config.DataSourceOrigin;
+                DatabaseOrigin = config.DatabaseOrigin;
+                Identifier = config.Identifier;
                 Strategy = config.Strategy;
                 TableName = config.TableName;
+                Set = config.Set;
+                Type = config.Type;
+                SourceAlias = config.MergeSourceAlias;
+                DestinationAlias = config.MergeDestinationAlias;
             }
             return config;
         }

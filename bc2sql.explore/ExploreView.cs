@@ -10,21 +10,23 @@ namespace bc2sql.explore
 {
     internal class ExploreView
     {
-        private Model _model;
+        private ExploreModel _model;
         public CurrentLibrary CurrentLibrary { get; private set; }
         public CurrentDataSource CurrentDataSource { get; private set; }
         public CurrentDataBase CurrentDataBase { get; private set; }
+        public CurrentScraper CurrentScraper { get; private set; }
         public BindingSource DataSources { get; private set; }
         public BindingSource Databases { get; private set; }
         public BindingSource Scrapers { get; private set; }
         public BindingSource Schedulers { get; private set; }
 
-        public ExploreView(Model model)
+        public ExploreView(ExploreModel model)
         {
             _model = model;
             CurrentLibrary = new CurrentLibrary(model);
             CurrentDataSource = new CurrentDataSource(model);
             CurrentDataBase = new CurrentDataBase(model);
+            CurrentScraper = new CurrentScraper(model);
 
             RefreshDataSources();
             RefreshDatabases();
@@ -63,6 +65,10 @@ namespace bc2sql.explore
         public bool HasSelectedDataSource()
         {
             return _model.SelectedDataSource != null;
+        }
+        public bool HasSelectedDatabase()
+        {
+            return _model.SelectedDatabase != null;
         }
         public bool HasSelectedMetadata()
         {

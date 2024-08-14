@@ -31,8 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupScraperConfigureKeysPage));
             this.keys = new System.Windows.Forms.DataGridView();
             this.keyOptions = new System.Windows.Forms.Panel();
-            this.selKeys = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.useAutokey = new System.Windows.Forms.CheckBox();
+            this.selKeys = new System.Windows.Forms.Label();
             this.columnTools = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.bindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,6 +43,7 @@
             this.selectDefaultKeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.keys)).BeginInit();
             this.keyOptions.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.columnTools.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,11 +58,13 @@
             this.keys.ShowEditingIcon = false;
             this.keys.Size = new System.Drawing.Size(500, 220);
             this.keys.TabIndex = 0;
+            this.keys.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.keys_CellContentClick);
+            this.keys.SelectionChanged += new System.EventHandler(this.keys_SelectionChanged);
             // 
             // keyOptions
             // 
+            this.keyOptions.Controls.Add(this.panel1);
             this.keyOptions.Controls.Add(this.selKeys);
-            this.keyOptions.Controls.Add(this.useAutokey);
             this.keyOptions.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.keyOptions.Location = new System.Drawing.Point(50, 295);
             this.keyOptions.Name = "keyOptions";
@@ -68,27 +72,37 @@
             this.keyOptions.Size = new System.Drawing.Size(500, 55);
             this.keyOptions.TabIndex = 1;
             // 
-            // selKeys
+            // panel1
             // 
-            this.selKeys.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.selKeys.Location = new System.Drawing.Point(8, 25);
-            this.selKeys.Name = "selKeys";
-            this.selKeys.Size = new System.Drawing.Size(484, 22);
-            this.selKeys.TabIndex = 1;
-            this.selKeys.Text = "Selected key(s):";
-            this.selKeys.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.useAutokey);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(8, 8);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(484, 17);
+            this.panel1.TabIndex = 2;
             // 
             // useAutokey
             // 
             this.useAutokey.AutoSize = true;
-            this.useAutokey.Dock = System.Windows.Forms.DockStyle.Top;
-            this.useAutokey.Location = new System.Drawing.Point(8, 8);
+            this.useAutokey.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.useAutokey.Location = new System.Drawing.Point(0, 0);
             this.useAutokey.Name = "useAutokey";
             this.useAutokey.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.useAutokey.Size = new System.Drawing.Size(484, 17);
             this.useAutokey.TabIndex = 0;
             this.useAutokey.Text = "Use System GUID and Insert/Modify Date";
             this.useAutokey.UseVisualStyleBackColor = true;
+            // 
+            // selKeys
+            // 
+            this.selKeys.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.selKeys.Location = new System.Drawing.Point(8, 8);
+            this.selKeys.Name = "selKeys";
+            this.selKeys.Size = new System.Drawing.Size(484, 39);
+            this.selKeys.TabIndex = 1;
+            this.selKeys.Text = "Selected key(s):";
+            this.selKeys.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // columnTools
             // 
@@ -125,19 +139,20 @@
             // asGUIDToolStripMenuItem
             // 
             this.asGUIDToolStripMenuItem.Name = "asGUIDToolStripMenuItem";
-            this.asGUIDToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asGUIDToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.asGUIDToolStripMenuItem.Text = "As GUID";
+            this.asGUIDToolStripMenuItem.Click += new System.EventHandler(this.asGUIDToolStripMenuItem_Click);
             // 
             // asInsertDateToolStripMenuItem
             // 
             this.asInsertDateToolStripMenuItem.Name = "asInsertDateToolStripMenuItem";
-            this.asInsertDateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asInsertDateToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.asInsertDateToolStripMenuItem.Text = "As Insert Date";
             // 
             // asModifyDateToolStripMenuItem
             // 
             this.asModifyDateToolStripMenuItem.Name = "asModifyDateToolStripMenuItem";
-            this.asModifyDateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asModifyDateToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.asModifyDateToolStripMenuItem.Text = "As Modify Date";
             // 
             // selectDefaultKeysToolStripMenuItem
@@ -145,6 +160,7 @@
             this.selectDefaultKeysToolStripMenuItem.Name = "selectDefaultKeysToolStripMenuItem";
             this.selectDefaultKeysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.selectDefaultKeysToolStripMenuItem.Text = "Select default keys";
+            this.selectDefaultKeysToolStripMenuItem.Click += new System.EventHandler(this.selectDefaultKeysToolStripMenuItem_Click);
             // 
             // SetupScraperConfigureKeysPage
             // 
@@ -160,6 +176,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.keys)).EndInit();
             this.keyOptions.ResumeLayout(false);
             this.keyOptions.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.columnTools.ResumeLayout(false);
             this.columnTools.PerformLayout();
             this.ResumeLayout(false);
@@ -180,5 +198,6 @@
         private System.Windows.Forms.ToolStripMenuItem asInsertDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem asModifyDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectDefaultKeysToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
     }
 }

@@ -10,6 +10,13 @@ namespace bc2sql.shared.OData
 {
     public class ODataQuery
     {
+        public static ODataQuery Empty = new ODataQuery(
+            string.Empty,
+            string.Empty,
+            new ODataQueryColumn[0],
+            new object[0][]
+        );
+
         public string InferedEntity;
         public string Context;
         public ODataQueryColumn[] Columns;
@@ -130,6 +137,14 @@ namespace bc2sql.shared.OData
                 }
             }
             throw new KeyNotFoundException(InferedEntity);
+        }
+
+        private ODataQuery(string inferedEntity, string context, ODataQueryColumn[] columns, object[][] rows)
+        {
+            InferedEntity = inferedEntity;
+            Context = context;
+            Columns = columns;
+            Rows = rows;
         }
 
         public ODataQuery(StreamReader reader, string inferedEntity, bool annotateColumns = true, bool ignoreOdataFields = false) 

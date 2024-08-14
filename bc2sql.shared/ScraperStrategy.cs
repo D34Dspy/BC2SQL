@@ -9,6 +9,6 @@ namespace bc2sql.shared
     public enum ScraperStrategy
     {
         Full,
-        Merge
+        Windowed
     }
 }

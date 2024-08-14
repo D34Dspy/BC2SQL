@@ -17,7 +17,7 @@ namespace bc2sql.explore.Views
         }
 
 
-        Model _model;
+        ExploreModel _model;
 
         [DescriptionAttribute("Filename of current database"),
             CategoryAttribute("Workspace")]
@@ -96,7 +96,7 @@ namespace bc2sql.explore.Views
             }
         }
 
-        public CurrentDataBase(Model model)
+        public CurrentDataBase(ExploreModel model)
         {
             _model = model;
         }
