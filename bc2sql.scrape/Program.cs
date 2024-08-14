@@ -1,4 +1,5 @@
 ﻿using bc2sql.shared;
+using bc2sql.shared.Auth;
 using bc2sql.shared.OData;
 using bc2sql.shared.Serialize;
 using bc2sql.shared.SQL;
@@ -16,13 +17,24 @@ namespace bc2sql.scrape
     {
         static void Scrape(DataSourceConfig ds, DatabaseConfig db, ScraperConfig scr)
         {
-            if (ds.AuthType == shared.Auth.Types.OAuth2 && !ds.FetchOAuth2())
+            if (ds.AuthType == Types.OAuth2 && !ds.FetchOAuth2())
             {
                 Console.WriteLine("-- unable to acquire oauth2 access token");
                 return;
             }
 
-            var req = ODataQueryRequest.Create(ds.Endpoint, scr.Set.Name, scr.FormFields);
+            var req = ODataQueryRequest.Create(ds.Endpoint, scr.Set.Name, scr.FormFields, false, 10000, (body) =>
+            {
+                if (ds.AuthType == Types.WindowsUser)
+                {
+                    body.UseDefaultCredentials = true;
+                }
+                    if (ds.AuthType == Types.OAuth2)
+                {
+                    body.Headers.Add("Authorization: Bearer " + ds.OAuth2AccessToken);
+                }
+            });
+
             var query = req.GetResponse();
 
             var datasets = query.MapDatasets(scr.Type);

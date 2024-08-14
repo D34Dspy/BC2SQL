@@ -40,7 +40,7 @@ namespace bc2sql.shared.OData
             }
 
             var req = WebRequest.Create(target);
-            req.UseDefaultCredentials = true;
+            // req.UseDefaultCredentials = true;
             req.Timeout = timeout;
             req.Method = "GET";
 
